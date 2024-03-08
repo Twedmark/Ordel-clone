@@ -6,9 +6,21 @@ function Keyboard() {
   const { word, triedLetters, LettersInRightPlace } = useContext(GameContext);
   const { activeRow } = useContext(RowContext);
 
+  const handleClickedLetter = (letter) => {
+    console.log("test");
+
+    const event = new KeyboardEvent("keydown", {
+      key: letter,
+      code: letter,
+      which: letter.charCodeAt(0),
+      keyCode: letter.charCodeAt(0),
+    });
+    document.dispatchEvent(event);
+  };
+
   useEffect(() => {}, [activeRow, triedLetters]);
 
-  const creteButton = (letter, index) => {
+  const createButton = (letter, index) => {
     let isLetterInRightPlace = false;
     let isLetterInWord = false;
     let isLetterTried = false;
@@ -33,12 +45,18 @@ function Keyboard() {
 
     return (
       <button
+        style={{
+          gridArea: letter,
+        }}
         key={index}
         className={`key ${isLetterInRightPlace ? "Correct" : ""}${
           isLetterInWord && isLetterTried && !isLetterInRightPlace
             ? "WrongPlace"
             : ""
         }${isLetterTried && !isLetterInWord ? "Incorrect" : ""}`}
+        onClick={() => {
+          handleClickedLetter(letter);
+        }}
       >
         {letter}
       </button>
@@ -48,9 +66,26 @@ function Keyboard() {
   return (
     <section className="keyboard">
       <div className="keys">
-        {Array.from("QWERTYUIOPÅASDFGHJKLÖÄZXCVBNM").map((letter, index) =>
-          creteButton(letter, index)
+        {/* {Array.from("QWERTYUIOPÅASDFGHJKLÖÄZXCVBNM").map((letter, index) =>  swedish keyboard */}
+        {Array.from("QWERTYUIOPASDFGHJKLZXCVBNM").map((letter, index) =>
+          createButton(letter, index)
         )}
+        <button
+          className="key backSpace"
+          onClick={() => {
+            handleClickedLetter("Backspace");
+          }}
+        >
+          <i className="material-icons">backspace</i>
+        </button>
+        <button
+          className="key enter"
+          onClick={() => {
+            handleClickedLetter("Enter");
+          }}
+        >
+          Play
+        </button>
       </div>
     </section>
   );
