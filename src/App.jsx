@@ -25,8 +25,6 @@ function App() {
     }
 
     getTodaysWord();
-
-    console.log(word);
   }, [word]);
 
   return (

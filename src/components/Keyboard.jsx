@@ -7,8 +7,6 @@ function Keyboard() {
   const { activeRow } = useContext(RowContext);
 
   const handleClickedLetter = (letter) => {
-    console.log("test");
-
     const event = new KeyboardEvent("keydown", {
       key: letter,
       code: letter,
