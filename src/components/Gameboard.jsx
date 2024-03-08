@@ -52,17 +52,24 @@ function Gameboard() {
             return newRows;
           });
         } else if (event.key === "Enter") {
+          // looks for empty filed
           if (row.includes("")) {
             setAnimate(true);
             console.log("fyll i alla rutor!");
             return;
-          } else if (!allWords.includes(row.join("").toUpperCase())) {
+          }
+          // looks for if the word is in the allowed guesses array
+          else if (!allWords.includes(row.join("").toUpperCase())) {
             setAnimate(true);
             console.log("ordet finns inte!");
             return;
-          } else if (row.join("").toUpperCase() === word) {
+          }
+          // looks if it's the right word
+          else if (row.join("").toUpperCase() === word) {
             setRoundOver(true);
-            window.alert("Rätt!!");
+            // window.alert("Rätt!!");
+            console.log("Rätt!!");
+            return;
           }
           for (let i = 0; i < 5; i++) {
             if (row[i].toUpperCase() === word[i].toUpperCase()) {
