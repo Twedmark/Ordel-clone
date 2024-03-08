@@ -31,6 +31,8 @@ function pickWordBasedOnDate(date, wordsList) {
 
 app.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin", "https://localhost:3000");
+  res.header("Access-Control-Allow-Methods", "GET, POST");
+  res.header("Access-Control-Allow-Headers", "Content-Type");
   next();
 });
 
@@ -48,5 +50,18 @@ app.get("/api/word", (req, res) => {
     const currentDate = new Date();
     const chosenWord = pickWordBasedOnDate(currentDate, words);
     res.json({ word: chosenWord });
+  }
+});
+
+app.get("/api/allowedWord/:word", (req, res) => {
+  console.log("get /api/allowedWord");
+  const words = readWordsFromFile("allowedGuesses.txt");
+
+  console.log(req.params.word);
+
+  if (words.includes(req.params.word)) {
+    res.json({ success: true });
+  } else {
+    res.json({ success: false });
   }
 });

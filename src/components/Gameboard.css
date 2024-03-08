@@ -12,8 +12,7 @@
   box-sizing: border-box;
   display: flex;
   flex-grow: 1;
-  max-height: 420px;
-  padding: 1rem;
+  max-height: 425px;
   position: relative;
 }
 

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import { GameContext, RowContext, allWords } from "../App";
+import { GameContext, RowContext } from "../App";
 
 import "./Gameboard.css";
 
@@ -20,11 +20,13 @@ function Gameboard() {
 
   useEffect(() => {
     const handleKeyPress = (event) => {
+      document.activeElement.blur();
       setAnimate(false);
 
-      const handleRow = (row, rowIndex) => {
+      const handleRow = async (row, rowIndex) => {
         // this means that the game is over
         if (activeRow === 6 || roundOver) {
+          console.log("The game is over");
           return;
         }
         const emptyIndex = row.indexOf("");
@@ -52,25 +54,26 @@ function Gameboard() {
             return newRows;
           });
         } else if (event.key === "Enter") {
+          const guess = row.join("").toUpperCase();
           // looks for empty filed
           if (row.includes("")) {
             setAnimate(true);
-            console.log("fyll i alla rutor!");
+            console.log("Please fill in all fields!");
             return;
           }
-          // looks for if the word is in the allowed guesses array
-          else if (!allWords.includes(row.join("").toUpperCase())) {
+
+          const allowedGuess = await fetch(
+            `http://localhost:3001/api/allowedWord/${guess}`
+          ).then((res) => {
+            return res.json();
+          });
+
+          if (!allowedGuess.success) {
             setAnimate(true);
-            console.log("ordet finns inte!");
+            console.log("The word is not allowed!");
             return;
           }
-          // looks if it's the right word
-          else if (row.join("").toUpperCase() === word) {
-            setRoundOver(true);
-            // window.alert("Rätt!!");
-            console.log("Rätt!!");
-            return;
-          }
+
           for (let i = 0; i < 5; i++) {
             if (row[i].toUpperCase() === word[i].toUpperCase()) {
               if (!LettersInRightPlace.includes(row[i])) {
@@ -80,10 +83,17 @@ function Gameboard() {
               triedLetters.push(row[i].toUpperCase());
             }
           }
-
           setActiveRow((prevRow) => (prevRow < 6 ? prevRow + 1 : prevRow));
-          if (activeRow === 5 && row.join("").toUpperCase() !== word) {
-            window.alert("Tyvärr va de fel med, rätta ordet var: " + word);
+          // looks if it's the right word
+          if (guess === word) {
+            setRoundOver(true);
+            // window.alert("Rätt!!");
+            console.log("Rätt!!");
+            return;
+          }
+
+          if (activeRow === 5 && guess !== word) {
+            window.alert("Sorry that was wrong, the right word was: " + word);
           }
         }
       };
@@ -96,7 +106,15 @@ function Gameboard() {
     return () => {
       document.removeEventListener("keydown", handleKeyPress);
     };
-  }, [rows, activeRow]);
+  }, [
+    rows,
+    activeRow,
+    roundOver,
+    word,
+    triedLetters,
+    LettersInRightPlace,
+    setActiveRow,
+  ]);
 
   return (
     <section className="mainGrid">
