@@ -1,10 +1,10 @@
-import React, { useContext, useEffect } from "react";
-import { GameContext, RowContext } from "../App";
+import React, { useContext } from "react";
+import { GameContext } from "../App";
 import "./Keyboard.css";
 
 function Keyboard() {
-  const { word, triedLetters, LettersInRightPlace } = useContext(GameContext);
-  const { activeRow } = useContext(RowContext);
+  const { triedLetters, lettersInRightPlace, lettersInWrongPlace } =
+    useContext(GameContext);
 
   const handleClickedLetter = (letter) => {
     const event = new KeyboardEvent("keydown", {
@@ -16,21 +16,25 @@ function Keyboard() {
     document.dispatchEvent(event);
   };
 
-  useEffect(() => {}, [activeRow, triedLetters]);
+  const testingFunction = () => {
+    fetch("http://localhost:3001/api/test")
+      .then((res) => res.json())
+      .then((data) => console.log(data));
+  };
 
   const createButton = (letter, index) => {
     let isLetterInRightPlace = false;
     let isLetterInWord = false;
     let isLetterTried = false;
 
-    for (let i = 0; i < LettersInRightPlace.length; i++) {
-      if (LettersInRightPlace[i] === letter.toUpperCase()) {
+    for (let i = 0; i < lettersInRightPlace.length; i++) {
+      if (lettersInRightPlace[i] === letter.toUpperCase()) {
         isLetterInRightPlace = true;
       }
     }
 
-    for (let i = 0; i < word.length; i++) {
-      if (word[i] === letter.toUpperCase()) {
+    for (let i = 0; i < lettersInWrongPlace.length; i++) {
+      if (lettersInWrongPlace[i] === letter.toUpperCase()) {
         isLetterInWord = true;
       }
     }
@@ -48,9 +52,7 @@ function Keyboard() {
         }}
         key={index}
         className={`key ${isLetterInRightPlace ? "Correct" : ""}${
-          isLetterInWord && isLetterTried && !isLetterInRightPlace
-            ? "WrongPlace"
-            : ""
+          isLetterInWord && !isLetterInRightPlace ? "WrongPlace" : ""
         }${isLetterTried && !isLetterInWord ? "Incorrect" : ""}`}
         onClick={() => {
           handleClickedLetter(letter);
@@ -85,6 +87,13 @@ function Keyboard() {
           Play
         </button>
       </div>
+      <button
+        onClick={() => {
+          testingFunction();
+        }}
+      >
+        Test
+      </button>
     </section>
   );
 }

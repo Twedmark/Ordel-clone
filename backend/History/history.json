@@ -1,0 +1,36 @@
+{
+  "GameHistory": [
+    {
+      "roundNumber": 1,
+      "word": "PHASE"
+    },
+    {
+      "roundNumber": 2,
+      "word": "HELLO"
+    },
+    {
+      "roundNumber": 3,
+      "word": "PROBE"
+    },
+    {
+      "roundNumber": 4,
+      "word": "PROBE"
+    },
+    {
+      "roundNumber": 5,
+      "word": "RECUR"
+    },
+    {
+      "roundNumber": 6,
+      "word": "ETHOS"
+    },
+    {
+      "roundNumber": 7,
+      "word": "USAGE"
+    },
+    {
+      "roundNumber": 8,
+      "word": "RODEO"
+    }
+  ]
+}

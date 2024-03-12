@@ -4,7 +4,8 @@ import { GameContext, RowContext } from "../App";
 import "./Gameboard.css";
 
 function Gameboard() {
-  const { word, triedLetters, LettersInRightPlace } = useContext(GameContext);
+  const { triedLetters, lettersInWrongPlace, lettersInRightPlace } =
+    useContext(GameContext);
   const { activeRow, setActiveRow } = useContext(RowContext);
   const [rows, setRows] = useState([
     Array(5).fill(""),
@@ -62,6 +63,7 @@ function Gameboard() {
             return;
           }
 
+          // TODO: Change name
           const allowedGuess = await fetch(
             `http://localhost:3001/api/allowedWord/${guess}`
           ).then((res) => {
@@ -72,28 +74,36 @@ function Gameboard() {
             setAnimate(true);
             console.log("The word is not allowed!");
             return;
+          } else {
+            allowedGuess.triedLetters.forEach((letter) => {
+              if (!triedLetters.includes(letter)) {
+                triedLetters.push(letter);
+              }
+            });
+
+            allowedGuess.lettersInRightPlace.forEach((letter, index) => {
+              lettersInRightPlace[index] = letter;
+            });
+
+            allowedGuess.lettersInWrongPlace.forEach((letter, index) => {
+              lettersInWrongPlace[index] = letter;
+            });
           }
 
-          for (let i = 0; i < 5; i++) {
-            if (row[i].toUpperCase() === word[i].toUpperCase()) {
-              if (!LettersInRightPlace.includes(row[i])) {
-                LettersInRightPlace.push(row[i].toUpperCase());
-              }
-            } else if (!triedLetters.includes(row[i])) {
-              triedLetters.push(row[i].toUpperCase());
-            }
-          }
           setActiveRow((prevRow) => (prevRow < 6 ? prevRow + 1 : prevRow));
           // looks if it's the right word
-          if (guess === word) {
+          if (allowedGuess.allCorrect) {
             setRoundOver(true);
             // window.alert("Rätt!!");
             console.log("Rätt!!");
             return;
           }
 
-          if (activeRow === 5 && guess !== word) {
-            window.alert("Sorry that was wrong, the right word was: " + word);
+          if (activeRow === 5 && !allowedGuess.allCorrect) {
+            const rightWord = await fetch("http://localhost:3001/api/word");
+            window.alert(
+              "Sorry that was wrong, the right word was: " + rightWord
+            );
           }
         }
       };
@@ -110,9 +120,10 @@ function Gameboard() {
     rows,
     activeRow,
     roundOver,
-    word,
+    setRoundOver,
     triedLetters,
-    LettersInRightPlace,
+    lettersInRightPlace,
+    lettersInWrongPlace,
     setActiveRow,
   ]);
 
@@ -123,7 +134,8 @@ function Gameboard() {
           {rows.map((row, index) => {
             return makeRow(
               row,
-              word,
+              lettersInRightPlace,
+              lettersInWrongPlace,
               animate,
               activeRow === index,
               activeRow,
@@ -136,50 +148,31 @@ function Gameboard() {
   );
 }
 
-const makeRow = (row, word, animate, isActiveRow, activeRow, index) => {
-  let isCorrectArray = [];
-  let wrongPlaceArray = [];
-  let tempWord = word;
-
-  // Loop 1: Check if each character is correct or in the wrong place
-  if (!isActiveRow) {
-    for (let i = 0; i < 5; i++) {
-      const isCorrect = row[i] === word[i];
-      isCorrectArray.push(isCorrect);
-
-      if (isCorrect) {
-        tempWord = tempWord.replace(row[i], " ");
-      }
-    }
-    // loop 1.5: Check if the character is in the wrong place
-    for (let i = 0; i < 5; i++) {
-      const wrongPlace =
-        tempWord.includes(row[i]) && row[i] !== "" && !isCorrectArray[i];
-      wrongPlaceArray.push(wrongPlace);
-      // remove the character from the tempWord so it doesn't get counted twice
-      if (wrongPlace) {
-        tempWord = tempWord.replace(row[i], " ");
-      }
-    }
-  }
-
-  // Loop 2: Generate HTML based on the checks
+const makeRow = (
+  row,
+  lettersInRightPlace,
+  lettersInWrongPlace,
+  animate,
+  isActiveRow,
+  activeRow,
+  index
+) => {
+  //Generate HTML based on the response from the backend and the current state
   let tiles = [];
   for (let i = 0; i < 5; i++) {
+    let isCorrect = lettersInRightPlace[i] === row[i] && row[i] !== "";
+    let wrongPlace = lettersInWrongPlace[i] === row[i] && row[i] !== "";
+
     tiles.push(
       <div
         key={i}
-        className={`tile ${isCorrectArray[i] && !isActiveRow ? "correct" : ""}${
-          wrongPlaceArray[i] && !isCorrectArray[i] && !isActiveRow
-            ? "wrongPlace"
-            : ""
-        }${isActiveRow ? "active" : ""}${
+        className={`tile ${isActiveRow ? "active" : ""}${
           animate && isActiveRow ? " animate" : ""
-        }${
-          index < activeRow &&
-          !isActiveRow &&
-          !isCorrectArray[i] &&
-          !wrongPlaceArray[i]
+        }
+        ${isCorrect && !isActiveRow ? "correct" : ""}
+        ${wrongPlace && !isCorrect && !isActiveRow ? "wrongPlace" : ""}
+        ${
+          !isCorrect && !wrongPlace && index < activeRow && !isActiveRow
             ? "empty"
             : ""
         }`}

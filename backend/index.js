@@ -1,33 +1,10 @@
 const express = require("express");
-const crypto = require("crypto");
-const fs = require("node:fs");
+const { newRound } = require("./History/index");
+const { getCurrentWord, readWordsFromFile } = require("./FileOperations/index");
 
 const PORT = process.env.PORT || 3001;
 
 const app = express();
-
-function readWordsFromFile(filename) {
-  try {
-    const data = fs.readFileSync(filename, "utf8");
-    // returns to uppercase because the frontend needs the words in uppercase
-    return data
-      .toUpperCase()
-      .split("\n")
-      .filter((word) => word.trim() !== "");
-  } catch (err) {
-    console.error("Error reading file:", err);
-    return [];
-  }
-}
-
-function pickWordBasedOnDate(date, wordsList) {
-  const hash = crypto
-    .createHash("sha256")
-    .update(date.toISOString().slice(0, 10))
-    .digest("hex");
-  const index = parseInt(hash, 16) % wordsList.length;
-  return wordsList[index];
-}
 
 app.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin", "https://localhost:3000");
@@ -42,26 +19,73 @@ app.listen(PORT, () => {
 
 app.get("/api/word", (req, res) => {
   console.log("GET /api/word");
-  const words = readWordsFromFile("selectedWords.txt");
 
-  if (words.length === 0) {
-    console.log("No words found in the file.");
+  const word = getCurrentWord();
+  console.log(word);
+
+  // res.json({ word });
+});
+
+app.get("/api/allowedWord/:word", async (req, res) => {
+  console.log("get /api/allowedWord");
+
+  const responseObj = {
+    success: false,
+    allCorrect: false,
+    lettersInRightPlace: Array(5).fill(""),
+    lettersInWrongPlace: Array(5).fill(""),
+    triedLetters: [],
+  };
+
+  const words = readWordsFromFile("allowedGuesses.txt");
+
+  if (words.includes(req.params.word)) {
+    responseObj.success = true;
+
+    const correctWord = await getCurrentWord();
+
+    for (let i = 0; i < 5; i++) {
+      if (req.params.word[i].toUpperCase() === correctWord[i].toUpperCase()) {
+        responseObj.lettersInRightPlace[i] = req.params.word[i].toUpperCase();
+      } else if (correctWord.includes(req.params.word[i])) {
+        responseObj.lettersInWrongPlace[i] = req.params.word[i].toUpperCase();
+      } else if (!responseObj.triedLetters.includes(req.params.word[i])) {
+        responseObj.triedLetters.push(req.params.word[i].toUpperCase());
+      }
+
+      // if (req.params.word[i].toUpperCase() === correctWord[i].toUpperCase()) {
+      //   if (!responseObj.lettersInRightPlace.includes(req.params.word[i])) {
+      //     responseObj.lettersInRightPlace.push(
+      //       req.params.word[i].toUpperCase()
+      //     );
+      //   }
+      // } else if (correctWord.includes(req.params.word[i])) {
+      //   if (!responseObj.lettersInWrongPlace.includes(req.params.word[i])) {
+      //     responseObj.lettersInWrongPlace.push(
+      //       req.params.word[i].toUpperCase()
+      //     );
+      //   }
+      // } else if (!responseObj.triedLetters.includes(req.params.word[i])) {
+      //   responseObj.triedLetters.push(req.params.word[i].toUpperCase());
+      // }
+    }
+
+    if (req.params.word === correctWord) {
+      responseObj.allCorrect = true;
+    }
+
+    console.log(responseObj);
+    res.json(responseObj);
   } else {
-    const currentDate = new Date();
-    const chosenWord = pickWordBasedOnDate(currentDate, words);
-    res.json({ word: chosenWord });
+    console.log(responseObj);
+    res.json({ success: false });
   }
 });
 
-app.get("/api/allowedWord/:word", (req, res) => {
-  console.log("get /api/allowedWord");
-  const words = readWordsFromFile("allowedGuesses.txt");
+app.get("/api/test", (req, res) => {
+  console.log("GET /api/test");
 
-  console.log(req.params.word);
+  let text = newRound();
 
-  if (words.includes(req.params.word)) {
-    res.json({ success: true });
-  } else {
-    res.json({ success: false });
-  }
+  res.json({ success: true });
 });
