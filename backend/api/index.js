@@ -20,8 +20,8 @@ app.listen(PORT, () => {
   console.log(`Server listening on ${PORT}`);
 });
 
-app.use("/", (req, res) => {
-  res.send(process.env.ORIGIN);
+app.get("/", (req, res) => {
+  res.send("live");
 });
 
 app.get("/api/word", (req, res) => {
