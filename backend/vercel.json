@@ -11,10 +11,11 @@
       "source": "/(.*)",
       "headers": [
         {
-          "Access-Control-Allow-Origin": "https://wordel-clone-frontend.vercel.app/",
-          "Access-Control-Allow-Methods": "GET",
-          "Access-Control-Allow-Headers": "Content-Type"
-        }
+          "key": "Access-Control-Allow-Origin",
+          "value": "https://wordel-clone-frontend.vercel.app/"
+        },
+        { "key": "Access-Control-Allow-Methods", "value": "GET" },
+        { "key": "Access-Control-Allow-Headers", "value": "Content-Type" }
       ]
     }
   ]
