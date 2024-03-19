@@ -21,7 +21,7 @@ app.listen(PORT, () => {
 });
 
 app.use("/", (req, res) => {
-  res.send("Test");
+  res.send(BASE_URL);
 });
 
 app.get("/api/word", (req, res) => {
