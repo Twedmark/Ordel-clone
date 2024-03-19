@@ -42,6 +42,8 @@ app.get("/api/allowedWord/:word", async (req, res) => {
 
   const words = readWordsFromFile("allowedGuesses.txt");
 
+  console.log(words);
+
   if (words.includes(req.params.word)) {
     responseObj.success = true;
 
