@@ -1,9 +1,9 @@
 const express = require("express");
-const { newRound } = require("./History/index");
+const { newRound } = require("../History/index");
 const {
   getCurrentRound,
   readWordsFromFile,
-} = require("./FileOperations/index");
+} = require("../FileOperations/index");
 const PORT = process.env.PORT || 3001;
 const app = express();
 
@@ -21,7 +21,7 @@ app.listen(PORT, () => {
 });
 
 app.use("/", (req, res) => {
-  res.send(BASE_URL);
+  res.send(process.env.ORIGIN);
 });
 
 app.get("/api/word", (req, res) => {
