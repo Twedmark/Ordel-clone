@@ -3,6 +3,8 @@ import Home from "./pages/Home";
 import { createContext, useEffect, useReducer, useState } from "react";
 import { gameStateReducer, initialState } from "./reducers/gameStateReducer";
 
+const BASE_URL = process.env.REACT_APP_BASE_URL;
+
 // i want to look for a cookie and if it exists and have the same round number as the server, then i want to use that cookie
 
 export const GameContext = createContext();
@@ -41,9 +43,9 @@ function App() {
 
   useEffect(() => {
     async function getTodaysWord() {
-      await fetch("http://localhost:3001/api/word").then((res) => {
+      await fetch(BASE_URL + "/api/word").then((res) => {
         res.json().then((data) => {
-          console.log(data);
+          // console.log(data);
         });
       });
     }
@@ -53,8 +55,8 @@ function App() {
 
   useEffect(() => {
     const fetchServerData = async () => {
-      const serverData = await fetch("http://localhost:3001/api/word").then(
-        (res) => res.json()
+      const serverData = await fetch(BASE_URL + "/api/word").then((res) =>
+        res.json()
       );
 
       const localStorageData =
@@ -81,18 +83,26 @@ function App() {
           return newRows;
         });
 
-        console.log(localStorageData.pastGuesses.length);
+        console.log(
+          "localStorageData.pastGuesses",
+          localStorageData.pastGuesses
+        );
+
+        const gameOverBool =
+          !localStorageData.pastGuesses.length === 0 ? true : false;
+        console.log("GameOverBool", gameOverBool);
 
         setGameStatus({
           activeRow: localStorageData.pastGuesses.length,
           gameOver:
             !localStorageData.pastGuesses.length === 0
-              ? localStorageData.pastGuesses.length === 5 ||
-                !localStorageData.pastGuesses[
+              ? !localStorageData.pastGuesses[
                   localStorageData.pastGuesses.length - 1
                 ].result.includes("-" || "W")
                 ? true
                 : false
+              : localStorageData.pastGuesses.length === 5
+              ? true
               : false,
         });
       } else {
@@ -103,6 +113,8 @@ function App() {
         localStorage.setItem("gameState", JSON.stringify(newState));
         dispatch({ type: "INITIALIZE_GAME", payload: newState });
       }
+
+      console.log("setting isInitialized to true");
       setIsInitialized(true);
     };
 
@@ -110,7 +122,9 @@ function App() {
   }, []);
 
   useEffect(() => {
+    console.log("isInitialized", isInitialized);
     if (isInitialized) {
+      console.log("setting Data");
       localStorage.setItem("gameState", JSON.stringify(gameState));
     }
   }, [gameState, isInitialized]);

@@ -2,6 +2,8 @@ import React, { useContext, useEffect, useState } from "react";
 import { RowContext } from "../App";
 import "./Keyboard.css";
 
+const BASE_URL = process.env.REACT_APP_BASE_URL;
+
 function Keyboard() {
   const { rows } = useContext(RowContext);
   const [className, setClassName] = useState({
@@ -37,7 +39,7 @@ function Keyboard() {
   });
 
   const testingFunction = () => {
-    fetch("http://localhost:3001/api/test")
+    fetch(BASE_URL + "/api/test")
       .then((res) => res.json())
       .then((data) => console.log(data));
   };

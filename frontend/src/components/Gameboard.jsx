@@ -2,6 +2,8 @@ import React, { useState, useEffect, useContext } from "react";
 import { RowContext, GameContext, ActiveRowContext } from "../App";
 import "./Gameboard.css";
 
+const BASE_URL = process.env.REACT_APP_BASE_URL;
+
 function Gameboard() {
   const { rows, setRows } = useContext(RowContext);
   const { gameState, dispatch } = useContext(GameContext);
@@ -11,7 +13,6 @@ function Gameboard() {
 
   useEffect(() => {
     const updateCurrentGuess = () => {
-      console.log("updating current guess");
       dispatch({
         type: "UPDATE_CURRENT_GUESS",
         payload: rows[gameStatus.activeRow].board,
@@ -69,7 +70,7 @@ function Gameboard() {
           }
 
           const response = await fetch(
-            `http://localhost:3001/api/allowedWord/${guess}`
+            `${BASE_URL}/api/allowedWord/${guess}`
           ).then((res) => {
             return res.json();
           });
@@ -88,8 +89,6 @@ function Gameboard() {
               });
               return newRows;
             });
-
-            console.log(response);
           }
 
           setGameStatus((prevStatus) => {
@@ -107,16 +106,16 @@ function Gameboard() {
               return { ...prevStatus, gameOver: true };
             });
             // window.alert("Rätt!!");
-            console.log("Rätt!!");
+            console.log("Corrent word!");
             return;
           }
 
           if (gameStatus.activeRow === 4 && !response.allCorrect) {
-            const rightWord = await fetch(
-              "http://localhost:3001/api/word"
-            ).then((res) => {
-              return res.json();
-            });
+            const rightWord = await fetch(BASE_URL + "/api/word").then(
+              (res) => {
+                return res.json();
+              }
+            );
 
             window.alert(
               "Sorry that was wrong, the right word was: " + rightWord.word
@@ -157,6 +156,7 @@ function Gameboard() {
 const makeRow = (row, result, animate, isActiveRow, activeRow, index) => {
   //Generate HTML based on the response from the backend and the current state
   let tiles = [];
+  let activeSquare = true;
   for (let i = 0; i < 5; i++) {
     const isCorrect = result[i] === "C";
     const wrongPlace = result[i] === "W";
@@ -165,6 +165,11 @@ const makeRow = (row, result, animate, isActiveRow, activeRow, index) => {
     if (isActiveRow) {
       className += " active";
     }
+    if (isActiveRow && row[i] === "" && activeSquare) {
+      activeSquare = false;
+      className += " activeSquare";
+    }
+
     if (animate) {
       className += " animate";
     }

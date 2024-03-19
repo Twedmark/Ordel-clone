@@ -74,6 +74,23 @@
   animation-fill-mode: forwards;
 }
 
+.tile.activeSquare {
+  background: #616162;
+  animation: blinking 2.5s infinite;
+}
+
+@keyframes blinking {
+  0% {
+    background: #616162;
+  }
+  50% {
+    background: #939599;
+  }
+  100% {
+    background: #616162;
+  }
+}
+
 /* animation shake list to right  */
 @keyframes shake {
   0% {
