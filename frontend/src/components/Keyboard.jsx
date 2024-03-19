@@ -39,7 +39,7 @@ function Keyboard() {
   });
 
   const testingFunction = () => {
-    fetch(BASE_URL + "/api/test")
+    fetch(BASE_URL + "api/test")
       .then((res) => res.json())
       .then((data) => console.log(data));
   };

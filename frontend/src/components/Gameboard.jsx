@@ -70,7 +70,7 @@ function Gameboard() {
           }
 
           const response = await fetch(
-            `${BASE_URL}/api/allowedWord/${guess}`
+            `${BASE_URL}api/allowedWord/${guess}`
           ).then((res) => {
             return res.json();
           });
@@ -111,11 +111,9 @@ function Gameboard() {
           }
 
           if (gameStatus.activeRow === 4 && !response.allCorrect) {
-            const rightWord = await fetch(BASE_URL + "/api/word").then(
-              (res) => {
-                return res.json();
-              }
-            );
+            const rightWord = await fetch(BASE_URL + "api/word").then((res) => {
+              return res.json();
+            });
 
             window.alert(
               "Sorry that was wrong, the right word was: " + rightWord.word

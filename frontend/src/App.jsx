@@ -43,7 +43,7 @@ function App() {
 
   useEffect(() => {
     async function getTodaysWord() {
-      await fetch(BASE_URL + "/api/word").then((res) => {
+      await fetch(BASE_URL + "api/word").then((res) => {
         res.json().then((data) => {
           // console.log(data);
         });
@@ -55,7 +55,7 @@ function App() {
 
   useEffect(() => {
     const fetchServerData = async () => {
-      const serverData = await fetch(BASE_URL + "/api/word").then((res) =>
+      const serverData = await fetch(BASE_URL + "api/word").then((res) =>
         res.json()
       );
 
