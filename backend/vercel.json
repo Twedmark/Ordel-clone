@@ -3,12 +3,19 @@
   "rewrites": [
     {
       "source": "/(.*)",
-      "destination": "/api",
-      "headers": {
-        "Access-Control-Allow-Origin": "https://wordel-clone-frontend.vercel.app/",
-        "Access-Control-Allow-Methods": "GET",
-        "Access-Control-Allow-Headers": "Content-Type"
-      }
+      "destination": "/api"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "Access-Control-Allow-Origin": "https://wordel-clone-frontend.vercel.app/",
+          "Access-Control-Allow-Methods": "GET",
+          "Access-Control-Allow-Headers": "Content-Type"
+        }
+      ]
     }
   ]
 }
