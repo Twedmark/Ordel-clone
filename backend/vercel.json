@@ -7,7 +7,7 @@
       "dest": "./",
       "methods": ["GET"],
       "headers": {
-        "Access-Control-Allow-Origin": "https://wordel-clone-frontend.vercel.app/"
+        "Access-Control-Allow-Origin": "https://wordel-clone-frontend.vercel.app"
       }
     }
   ]
