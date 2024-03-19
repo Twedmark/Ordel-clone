@@ -20,6 +20,10 @@ app.listen(PORT, () => {
   console.log(`Server listening on ${PORT}`);
 });
 
+app.use("/", (req, res) => {
+  res.send("Test");
+});
+
 app.get("/api/word", (req, res) => {
   console.log("GET /api/word");
 
