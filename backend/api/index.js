@@ -27,7 +27,6 @@ app.get("/api/word", (req, res) => {
 
   const round = getCurrentRound();
 
-  console.log(round);
   res.json(round);
 });
 
