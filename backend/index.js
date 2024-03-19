@@ -1,9 +1,10 @@
 const express = require("express");
 const { newRound } = require("./History/index");
-const { getCurrentWord, readWordsFromFile } = require("./FileOperations/index");
-
+const {
+  getCurrentRound,
+  readWordsFromFile,
+} = require("./FileOperations/index");
 const PORT = process.env.PORT || 3001;
-
 const app = express();
 
 app.use((req, res, next) => {
@@ -20,10 +21,10 @@ app.listen(PORT, () => {
 app.get("/api/word", (req, res) => {
   console.log("GET /api/word");
 
-  const word = getCurrentWord();
-  console.log(word);
+  const round = getCurrentRound();
 
-  // res.json({ word });
+  console.log(round);
+  res.json(round);
 });
 
 app.get("/api/allowedWord/:word", async (req, res) => {
@@ -32,9 +33,8 @@ app.get("/api/allowedWord/:word", async (req, res) => {
   const responseObj = {
     success: false,
     allCorrect: false,
-    lettersInRightPlace: Array(5).fill(""),
-    lettersInWrongPlace: Array(5).fill(""),
-    triedLetters: [],
+    guess: req.params.word.split(""),
+    result: Array(5).fill(""),
   };
 
   const words = readWordsFromFile("allowedGuesses.txt");
@@ -42,32 +42,16 @@ app.get("/api/allowedWord/:word", async (req, res) => {
   if (words.includes(req.params.word)) {
     responseObj.success = true;
 
-    const correctWord = await getCurrentWord();
+    const correctWord = await getCurrentRound().word;
 
     for (let i = 0; i < 5; i++) {
-      if (req.params.word[i].toUpperCase() === correctWord[i].toUpperCase()) {
-        responseObj.lettersInRightPlace[i] = req.params.word[i].toUpperCase();
-      } else if (correctWord.includes(req.params.word[i])) {
-        responseObj.lettersInWrongPlace[i] = req.params.word[i].toUpperCase();
-      } else if (!responseObj.triedLetters.includes(req.params.word[i])) {
-        responseObj.triedLetters.push(req.params.word[i].toUpperCase());
+      if (responseObj.guess[i].toUpperCase() === correctWord[i].toUpperCase()) {
+        responseObj.result[i] = "C";
+      } else if (correctWord.includes(responseObj.guess[i])) {
+        responseObj.result[i] = "W";
+      } else {
+        responseObj.result[i] = "-";
       }
-
-      // if (req.params.word[i].toUpperCase() === correctWord[i].toUpperCase()) {
-      //   if (!responseObj.lettersInRightPlace.includes(req.params.word[i])) {
-      //     responseObj.lettersInRightPlace.push(
-      //       req.params.word[i].toUpperCase()
-      //     );
-      //   }
-      // } else if (correctWord.includes(req.params.word[i])) {
-      //   if (!responseObj.lettersInWrongPlace.includes(req.params.word[i])) {
-      //     responseObj.lettersInWrongPlace.push(
-      //       req.params.word[i].toUpperCase()
-      //     );
-      //   }
-      // } else if (!responseObj.triedLetters.includes(req.params.word[i])) {
-      //   responseObj.triedLetters.push(req.params.word[i].toUpperCase());
-      // }
     }
 
     if (req.params.word === correctWord) {
@@ -77,7 +61,6 @@ app.get("/api/allowedWord/:word", async (req, res) => {
     console.log(responseObj);
     res.json(responseObj);
   } else {
-    console.log(responseObj);
     res.json({ success: false });
   }
 });

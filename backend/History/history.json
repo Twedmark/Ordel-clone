@@ -31,6 +31,30 @@
     {
       "roundNumber": 8,
       "word": "RODEO"
+    },
+    {
+      "roundNumber": 9,
+      "word": "SHACK"
+    },
+    {
+      "roundNumber": 10,
+      "word": "AZURE"
+    },
+    {
+      "roundNumber": 11,
+      "word": "MEDIA"
+    },
+    {
+      "roundNumber": 12,
+      "word": "DROOL"
+    },
+    {
+      "roundNumber": 13,
+      "word": "MULCH"
+    },
+    {
+      "roundNumber": 14,
+      "word": "SMOTE"
     }
   ]
 }

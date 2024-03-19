@@ -15,7 +15,7 @@ const readWordsFromFile = (filename) => {
   }
 };
 
-const getCurrentWord = () => {
+const getCurrentRound = () => {
   try {
     const data = fs.readFileSync(
       path.resolve(__dirname, "../History/history.json"),
@@ -23,10 +23,9 @@ const getCurrentWord = () => {
     );
 
     const history = JSON.parse(data);
-    const currentWord =
-      history.GameHistory[history.GameHistory.length - 1].word;
+    const currentRound = history.GameHistory[history.GameHistory.length - 1];
 
-    return currentWord;
+    return currentRound;
   } catch (err) {
     console.error("Error reading file:", err);
     return [];
@@ -35,5 +34,5 @@ const getCurrentWord = () => {
 
 module.exports = {
   readWordsFromFile,
-  getCurrentWord,
+  getCurrentRound,
 };

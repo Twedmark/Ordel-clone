@@ -1,23 +1,26 @@
 import React, { useState, useEffect, useContext } from "react";
-import { GameContext, RowContext } from "../App";
-
+import { RowContext, GameContext, ActiveRowContext } from "../App";
 import "./Gameboard.css";
 
 function Gameboard() {
-  const { triedLetters, lettersInWrongPlace, lettersInRightPlace } =
-    useContext(GameContext);
-  const { activeRow, setActiveRow } = useContext(RowContext);
-  const [rows, setRows] = useState([
-    Array(5).fill(""),
-    Array(5).fill(""),
-    Array(5).fill(""),
-    Array(5).fill(""),
-    Array(5).fill(""),
-    Array(5).fill(""),
-  ]);
+  const { rows, setRows } = useContext(RowContext);
+  const { gameState, dispatch } = useContext(GameContext);
+  const { gameStatus, setGameStatus } = useContext(ActiveRowContext);
   // used to shake the active row, if the input is wrong in some way
   const [animate, setAnimate] = useState(false);
-  const [roundOver, setRoundOver] = useState(false);
+
+  useEffect(() => {
+    const updateCurrentGuess = () => {
+      console.log("updating current guess");
+      dispatch({
+        type: "UPDATE_CURRENT_GUESS",
+        payload: rows[gameStatus.activeRow].board,
+      });
+    };
+    if (!gameStatus.gameOver) {
+      updateCurrentGuess();
+    }
+  }, [rows, gameStatus, dispatch]);
 
   useEffect(() => {
     const handleKeyPress = (event) => {
@@ -26,89 +29,102 @@ function Gameboard() {
 
       const handleRow = async (row, rowIndex) => {
         // this means that the game is over
-        if (activeRow === 6 || roundOver) {
+        if (gameStatus.activeRow === 5 || gameStatus.gameOver) {
           console.log("The game is over");
           return;
         }
-        const emptyIndex = row.indexOf("");
+        const emptyIndex = row.board.indexOf("");
 
         if (
           emptyIndex !== -1 &&
           event.key.length === 1 &&
           event.key.match(/[a-ö]/i)
         ) {
-          row[emptyIndex] = event.key.toUpperCase();
-          setRows((prevRows) => {
-            const newRows = [...prevRows];
-            newRows[rowIndex] = [...row];
-            return newRows;
-          });
+          const newRow = { ...row };
+          newRow.board[emptyIndex] = event.key.toUpperCase();
+          setRows({ ...rows, [rowIndex]: row });
         } else if (event.key === "Backspace") {
           if (emptyIndex === -1) {
-            row[4] = "";
+            setRows((prevRows) => {
+              const newRows = { ...prevRows };
+              newRows[rowIndex].board[4] = "";
+              return newRows;
+            });
           } else {
-            row[emptyIndex - 1] = "";
+            setRows((prevRows) => {
+              const newRows = { ...prevRows };
+              newRows[rowIndex].board[emptyIndex - 1] = "";
+              return newRows;
+            });
           }
-          setRows((prevRows) => {
-            const newRows = [...prevRows];
-            newRows[rowIndex] = [...row];
-            return newRows;
-          });
+
+          setRows({ ...rows, [rowIndex]: row });
         } else if (event.key === "Enter") {
-          const guess = row.join("").toUpperCase();
+          const guess = row.board.join("").toUpperCase();
           // looks for empty filed
-          if (row.includes("")) {
+          if (row.board.includes("")) {
             setAnimate(true);
             console.log("Please fill in all fields!");
             return;
           }
 
-          // TODO: Change name
-          const allowedGuess = await fetch(
+          const response = await fetch(
             `http://localhost:3001/api/allowedWord/${guess}`
           ).then((res) => {
             return res.json();
           });
 
-          if (!allowedGuess.success) {
+          if (!response.success) {
             setAnimate(true);
             console.log("The word is not allowed!");
             return;
           } else {
-            allowedGuess.triedLetters.forEach((letter) => {
-              if (!triedLetters.includes(letter)) {
-                triedLetters.push(letter);
-              }
+            setRows((prevRows) => {
+              const newRows = { ...prevRows };
+              newRows[rowIndex].result = response.result;
+              dispatch({
+                type: "ADD_GUESS",
+                payload: { board: row.board, result: response.result },
+              });
+              return newRows;
             });
 
-            allowedGuess.lettersInRightPlace.forEach((letter, index) => {
-              lettersInRightPlace[index] = letter;
-            });
-
-            allowedGuess.lettersInWrongPlace.forEach((letter, index) => {
-              lettersInWrongPlace[index] = letter;
-            });
+            console.log(response);
           }
 
-          setActiveRow((prevRow) => (prevRow < 6 ? prevRow + 1 : prevRow));
+          setGameStatus((prevStatus) => {
+            return {
+              ...prevStatus,
+              activeRow:
+                prevStatus.activeRow < 6
+                  ? prevStatus.activeRow + 1
+                  : prevStatus.activeRow,
+            };
+          });
           // looks if it's the right word
-          if (allowedGuess.allCorrect) {
-            setRoundOver(true);
+          if (response.allCorrect) {
+            setGameStatus((prevStatus) => {
+              return { ...prevStatus, gameOver: true };
+            });
             // window.alert("Rätt!!");
             console.log("Rätt!!");
             return;
           }
 
-          if (activeRow === 5 && !allowedGuess.allCorrect) {
-            const rightWord = await fetch("http://localhost:3001/api/word");
+          if (gameStatus.activeRow === 4 && !response.allCorrect) {
+            const rightWord = await fetch(
+              "http://localhost:3001/api/word"
+            ).then((res) => {
+              return res.json();
+            });
+
             window.alert(
-              "Sorry that was wrong, the right word was: " + rightWord
+              "Sorry that was wrong, the right word was: " + rightWord.word
             );
           }
         }
       };
-
-      handleRow(rows[activeRow], activeRow);
+      handleRow(rows[gameStatus.activeRow], gameStatus.activeRow);
     };
 
     document.addEventListener("keydown", handleKeyPress);
@@ -116,29 +132,19 @@ function Gameboard() {
     return () => {
       document.removeEventListener("keydown", handleKeyPress);
     };
-  }, [
-    rows,
-    activeRow,
-    roundOver,
-    setRoundOver,
-    triedLetters,
-    lettersInRightPlace,
-    lettersInWrongPlace,
-    setActiveRow,
-  ]);
+  }, [rows, dispatch, setRows, gameState, gameStatus, setGameStatus]);
 
   return (
     <section className="mainGrid">
       <section className="center">
         <div className="tiles">
-          {rows.map((row, index) => {
+          {Object.keys(rows).map((row, index) => {
             return makeRow(
-              row,
-              lettersInRightPlace,
-              lettersInWrongPlace,
+              rows[row].board,
+              rows[row].result,
               animate,
-              activeRow === index,
-              activeRow,
+              gameStatus.activeRow === index,
+              gameStatus.activeRow,
               index
             );
           })}
@@ -148,35 +154,32 @@ function Gameboard() {
   );
 }
 
-const makeRow = (
-  row,
-  lettersInRightPlace,
-  lettersInWrongPlace,
-  animate,
-  isActiveRow,
-  activeRow,
-  index
-) => {
+const makeRow = (row, result, animate, isActiveRow, activeRow, index) => {
   //Generate HTML based on the response from the backend and the current state
   let tiles = [];
   for (let i = 0; i < 5; i++) {
-    let isCorrect = lettersInRightPlace[i] === row[i] && row[i] !== "";
-    let wrongPlace = lettersInWrongPlace[i] === row[i] && row[i] !== "";
+    const isCorrect = result[i] === "C";
+    const wrongPlace = result[i] === "W";
+
+    let className = "tile";
+    if (isActiveRow) {
+      className += " active";
+    }
+    if (animate) {
+      className += " animate";
+    }
+    if (isCorrect) {
+      className += " correct";
+    }
+    if (wrongPlace && !isCorrect) {
+      className += " wrongPlace";
+    }
+    if (!isCorrect && !wrongPlace && index < activeRow) {
+      className += " wrong";
+    }
 
     tiles.push(
-      <div
-        key={i}
-        className={`tile ${isActiveRow ? "active" : ""}${
-          animate && isActiveRow ? " animate" : ""
-        }
-        ${isCorrect && !isActiveRow ? "correct" : ""}
-        ${wrongPlace && !isCorrect && !isActiveRow ? "wrongPlace" : ""}
-        ${
-          !isCorrect && !wrongPlace && index < activeRow && !isActiveRow
-            ? "empty"
-            : ""
-        }`}
-      >
+      <div key={i} className={className}>
         <span>{row[i]}</span>
       </div>
     );

@@ -72,14 +72,14 @@ section {
   outline: none;
 }
 
-.key.Incorrect {
+.key.incorrect {
   background: rgb(59, 59, 59);
 }
 
-.key.Correct {
+.key.correct {
   background: green;
 }
 
-.key.WrongPlace {
+.key.wrongPlace {
   background: purple;
 }
