@@ -1,3 +1,5 @@
+require("dotenv").config();
+
 const express = require("express");
 const { newRound } = require("../History/index");
 const {
