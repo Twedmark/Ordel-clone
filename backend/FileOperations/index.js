@@ -1,11 +1,10 @@
 const fs = require("fs");
 const path = require("path");
 
-const configDirectory = path.resolve(process.cwd());
-
 const readWordsFromFile = (filename) => {
   try {
-    const data = fs.readFileSync(path.join(configDirectory, filename), "utf8");
+    const configDirectory = path.join(process.cwd(), filename);
+    const data = fs.readFileSync(configDirectory, "utf8");
     // returns to uppercase because the frontend needs the words in uppercase
     return data
       .toUpperCase()
@@ -19,10 +18,8 @@ const readWordsFromFile = (filename) => {
 
 const getCurrentRound = () => {
   try {
-    const data = fs.readFileSync(
-      path.join(configDirectory, "../backend/History/history.json"),
-      "utf8"
-    );
+    const configDirectory = path.join(process.cwd(), "History/history.json");
+    const data = fs.readFileSync(configDirectory, "utf8");
     const history = JSON.parse(data);
     const currentRound = history.GameHistory[history.GameHistory.length - 1];
 

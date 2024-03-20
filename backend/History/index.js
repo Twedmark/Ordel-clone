@@ -1,9 +1,6 @@
 const fs = require("node:fs");
 const crypto = require("crypto");
 const { readWordsFromFile } = require("../FileOperations/index");
-const path = require("path");
-
-const configDirectory = path.resolve(process.cwd());
 
 // History JSON file structure
 // {
