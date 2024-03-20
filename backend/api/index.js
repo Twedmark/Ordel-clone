@@ -25,7 +25,7 @@ app.listen(PORT, () => {
 });
 
 app.get("/", (req, res) => {
-  const configDirectory = path.join(process.cwd(), "history.json");
+  const configDirectory = path.join(process.cwd(), "backend/history.json");
   const data = fs.readFileSync(configDirectory, "utf8");
 
   res.json(data);
