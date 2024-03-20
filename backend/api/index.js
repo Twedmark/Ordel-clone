@@ -1,4 +1,6 @@
 require("dotenv").config();
+const path = require("path");
+const fs = require("fs");
 
 const express = require("express");
 const { newRound } = require("../History/index");
@@ -20,6 +22,13 @@ app.use((req, res, next) => {
 
 app.listen(PORT, () => {
   console.log(`Server listening on ${PORT}`);
+});
+
+app.get("/", (req, res) => {
+  const configDirectory = path.join(process.cwd(), "allowedGuesses.txt");
+  const data = fs.readFileSync(configDirectory, "utf8");
+
+  res.json(data);
 });
 
 app.get("/api/word", (req, res) => {
