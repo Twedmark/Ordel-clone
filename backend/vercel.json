@@ -21,7 +21,7 @@
   ],
   "functions": {
     "api/index.js": {
-      "includeFiles": "history.json"
+      "includeFiles": "history.json allowedGuesses.txt selectedWords.txt"
     }
   }
 }
