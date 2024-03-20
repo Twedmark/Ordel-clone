@@ -3,8 +3,8 @@ const path = require("path");
 const fs = require("fs");
 
 const express = require("express");
-const { newRound } = require("../History/index");
 const {
+  newRound,
   getCurrentRound,
   readWordsFromFile,
 } = require("../FileOperations/index");
@@ -34,10 +34,9 @@ app.get("/", (req, res) => {
 app.get("/api/word", (req, res) => {
   console.log("GET /api/word");
 
-  // const round = getCurrentRound();
+  const round = getCurrentRound();
 
-  // res.json(round);
-  res.json({ round: 13 });
+  res.json(round);
 });
 
 app.get("/api/allowedWord/:word", async (req, res) => {

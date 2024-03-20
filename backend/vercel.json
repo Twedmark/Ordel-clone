@@ -18,5 +18,10 @@
         { "key": "Access-Control-Allow-Headers", "value": "Content-Type" }
       ]
     }
-  ]
+  ],
+  "functions": {
+    "FileOperation/index.js": {
+      "includeFiles": "history.json"
+    }
+  }
 }
