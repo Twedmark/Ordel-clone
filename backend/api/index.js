@@ -25,10 +25,7 @@ app.listen(PORT, () => {
 });
 
 app.get("/", (req, res) => {
-  const configDirectory = path.join(
-    process.cwd(),
-    "backend/allowedGuesses.txt"
-  );
+  const configDirectory = path.join(process.cwd(), "allowedGuesses.txt");
   const data = fs.readFileSync(configDirectory, "utf8");
 
   res.json(data);
@@ -37,9 +34,10 @@ app.get("/", (req, res) => {
 app.get("/api/word", (req, res) => {
   console.log("GET /api/word");
 
-  const round = getCurrentRound();
+  // const round = getCurrentRound();
 
-  res.json(round);
+  // res.json(round);
+  res.json({ round: 13 });
 });
 
 app.get("/api/allowedWord/:word", async (req, res) => {
