@@ -20,7 +20,7 @@
     }
   ],
   "functions": {
-    "FileOperation/index.js": {
+    "api/index.js": {
       "includeFiles": "history.json"
     }
   }
