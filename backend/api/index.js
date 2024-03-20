@@ -25,7 +25,10 @@ app.listen(PORT, () => {
 });
 
 app.get("/", (req, res) => {
-  const configDirectory = path.join(process.cwd(), "allowedGuesses.txt");
+  const configDirectory = path.join(
+    process.cwd(),
+    "backend/allowedGuesses.txt"
+  );
   const data = fs.readFileSync(configDirectory, "utf8");
 
   res.json(data);
