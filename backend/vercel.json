@@ -21,7 +21,7 @@
   ],
   "functions": {
     "api/index.js": {
-      "includeFiles": "allowedGuesses.txt"
+      "includeFiles": "history.json"
     }
   }
 }
