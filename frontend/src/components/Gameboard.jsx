@@ -72,11 +72,13 @@ function Gameboard({ loading }) {
             return;
           }
 
+          console.time("fetchTime");
           const response = await fetch(
             `${BASE_URL}api/allowedWord/${guess}`
           ).then((res) => {
             return res.json();
           });
+          console.timeEnd("fetchTime");
 
           if (!response.success) {
             setAnimate(true);

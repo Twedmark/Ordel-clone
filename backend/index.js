@@ -36,6 +36,7 @@ app.get("/api/word", async (req, res) => {
 
 app.get("/api/allowedWord/:word", async (req, res) => {
   console.log("get /api/allowedWord");
+  console.time("GET allowedWord");
 
   const responseObj = {
     success: false,
@@ -44,12 +45,16 @@ app.get("/api/allowedWord/:word", async (req, res) => {
     result: Array(5).fill(""),
   };
 
+  console.time("DB allowedWord");
   const isAllowed = await allowedWord(req.params.word);
+  console.timeEnd("DB allowedWord");
 
   if (isAllowed) {
     responseObj.success = true;
 
+    console.time("GET currentRound");
     const currentRound = await getCurrentRound();
+    console.timeEnd("GET currentRound");
     const correctWord = currentRound.word;
 
     for (let i = 0; i < 5; i++) {
@@ -66,7 +71,7 @@ app.get("/api/allowedWord/:word", async (req, res) => {
       responseObj.allCorrect = true;
     }
 
-    console.log(responseObj);
+    console.timeEnd("GET allowedWord");
     res.json(responseObj);
   } else {
     res.json({ success: false });
