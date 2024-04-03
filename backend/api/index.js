@@ -28,11 +28,11 @@ app.get("/", (req, res) => {
   res.json({ success: true });
 });
 
-// app.get("/api/word", async (req, res) => {
-//   console.log("GET /api/word");
-//   const round = await getCurrentRound();
-//   res.json(round);
-// });
+app.get("/api/word", async (req, res) => {
+  console.log("GET /api/word");
+  const round = await getCurrentRound();
+  res.json(round);
+});
 
 app.get("/api/allowedWord/:word", async (req, res) => {
   console.log("get /api/allowedWord");
