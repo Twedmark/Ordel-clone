@@ -1,6 +1,6 @@
 import "./App.css";
 import Home from "./pages/Home";
-import { createContext, useEffect, useReducer, useState } from "react";
+import { createContext, useEffect, useReducer, useState, useRef } from "react";
 import { gameStateReducer, initialState } from "./reducers/gameStateReducer";
 
 const BASE_URL = process.env.REACT_APP_BASE_URL;
@@ -12,6 +12,8 @@ export const RowContext = createContext();
 export const ActiveRowContext = createContext();
 
 function App() {
+  const abortControllerRef = useRef(null);
+  const [error, setError] = useState(false);
   const [isInitialized, setIsInitialized] = useState(false);
   const [rows, setRows] = useState({
     0: {
@@ -42,22 +44,19 @@ function App() {
   const [gameState, dispatch] = useReducer(gameStateReducer, initialState);
 
   useEffect(() => {
-    async function getTodaysWord() {
-      await fetch(BASE_URL + "api/word").then((res) => {
-        res.json().then((data) => {
-          // console.log(data);
-        });
-      });
-    }
-
-    getTodaysWord();
-  }, []);
-
-  useEffect(() => {
     const fetchServerData = async () => {
-      const serverData = await fetch(BASE_URL + "api/word").then((res) =>
-        res.json()
-      );
+      abortControllerRef.current?.abort();
+      abortControllerRef.current = new AbortController();
+
+      const serverData = fetch(BASE_URL + "api/word", {
+        signal: abortControllerRef.current.signal,
+      })
+        .then((res) => res.json())
+        .catch((error) => {
+          if (error.name === "AbortError") return;
+          console.log("Error fetching server data:", error);
+          setError(true);
+        });
 
       const localStorageData =
         JSON.parse(localStorage.getItem("gameState")) || initialState;
@@ -83,27 +82,24 @@ function App() {
           return newRows;
         });
 
-        console.log(
-          "localStorageData.pastGuesses",
-          localStorageData.pastGuesses
-        );
+        let gameOverStatus;
 
-        const gameOverBool =
-          !localStorageData.pastGuesses.length === 0 ? true : false;
-        console.log("GameOverBool", gameOverBool);
+        switch (localStorageData.pastGuesses) {
+          case 0:
+            gameOverStatus = false;
+            break;
+          case 5:
+            gameOverStatus = true;
+            break;
+          default:
+            gameOverStatus = !localStorageData.pastGuesses[
+              localStorageData.pastGuesses.length - 1
+            ].result.includes("-" || "W");
+        }
 
         setGameStatus({
           activeRow: localStorageData.pastGuesses.length,
-          gameOver:
-            !localStorageData.pastGuesses.length === 0
-              ? !localStorageData.pastGuesses[
-                  localStorageData.pastGuesses.length - 1
-                ].result.includes("-" || "W")
-                ? true
-                : false
-              : localStorageData.pastGuesses.length === 5
-              ? true
-              : false,
+          gameOver: gameOverStatus,
         });
       } else {
         const newState = {
@@ -113,8 +109,6 @@ function App() {
         localStorage.setItem("gameState", JSON.stringify(newState));
         dispatch({ type: "INITIALIZE_GAME", payload: newState });
       }
-
-      console.log("setting isInitialized to true");
       setIsInitialized(true);
     };
 
@@ -122,18 +116,22 @@ function App() {
   }, []);
 
   useEffect(() => {
-    console.log("isInitialized", isInitialized);
     if (isInitialized) {
-      console.log("setting Data");
       localStorage.setItem("gameState", JSON.stringify(gameState));
     }
   }, [gameState, isInitialized]);
+
+  if (error) {
+    return <h1>Error fetching data please try again</h1>;
+  }
 
   return (
     <GameContext.Provider value={{ gameState, dispatch }}>
       <RowContext.Provider value={{ rows, setRows }}>
         <ActiveRowContext.Provider value={{ gameStatus, setGameStatus }}>
-          <div className="App">{rows ? <Home /> : ""}</div>
+          <div className="App">
+            <Home loading={isInitialized} />
+          </div>
         </ActiveRowContext.Provider>
       </RowContext.Provider>
     </GameContext.Provider>

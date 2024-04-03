@@ -4,12 +4,15 @@ import "./Gameboard.css";
 
 const BASE_URL = process.env.REACT_APP_BASE_URL;
 
-function Gameboard() {
+function Gameboard({ loading }) {
   const { rows, setRows } = useContext(RowContext);
   const { gameState, dispatch } = useContext(GameContext);
   const { gameStatus, setGameStatus } = useContext(ActiveRowContext);
   // used to shake the active row, if the input is wrong in some way
   const [animate, setAnimate] = useState(false);
+
+  console.log(gameState);
+  console.log(gameStatus);
 
   useEffect(() => {
     const updateCurrentGuess = () => {
@@ -142,7 +145,9 @@ function Gameboard() {
               animate,
               gameStatus.activeRow === index,
               gameStatus.activeRow,
-              index
+              gameStatus.gameOver,
+              index,
+              loading
             );
           })}
         </div>
@@ -151,7 +156,18 @@ function Gameboard() {
   );
 }
 
-const makeRow = (row, result, animate, isActiveRow, activeRow, index) => {
+const makeRow = (
+  row,
+  result,
+  animate,
+  isActiveRow,
+  activeRow,
+  gameOver,
+  index,
+  loading
+) => {
+  /// TODO - ADD LOADING "STATE" SO YOU CANT TYPE AND SEND REQUESTS WHILE GETTING THE RIGHT ROUND
+
   //Generate HTML based on the response from the backend and the current state
   let tiles = [];
   let activeSquare = true;
@@ -163,7 +179,7 @@ const makeRow = (row, result, animate, isActiveRow, activeRow, index) => {
     if (isActiveRow) {
       className += " active";
     }
-    if (isActiveRow && row[i] === "" && activeSquare) {
+    if (isActiveRow && row[i] === "" && activeSquare && !gameOver) {
       activeSquare = false;
       className += " activeSquare";
     }

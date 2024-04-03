@@ -1,13 +1,9 @@
 require("dotenv").config();
-const path = require("path");
-const fs = require("fs");
 
 const express = require("express");
-const {
-  newRound,
-  getCurrentRound,
-  readWordsFromFile,
-} = require("../FileOperations/index");
+const { getCurrentRound, allowedWord } = require("../db");
+const { newRound } = require("../cron");
+
 const PORT = process.env.PORT || 3001;
 const app = express();
 
@@ -24,18 +20,15 @@ app.listen(PORT, () => {
   console.log(`Server listening on ${PORT}`);
 });
 
-app.get("/", (req, res) => {
-  const configDirectory = path.join(process.cwd(), "backend/history.json");
-  const data = fs.readFileSync(configDirectory, "utf8");
+app.use("/cron", newRound);
 
-  res.json(data);
+app.get("/", (req, res) => {
+  res.json({ success: true });
 });
 
-app.get("/api/word", (req, res) => {
+app.get("/api/word", async (req, res) => {
   console.log("GET /api/word");
-
-  const round = getCurrentRound();
-
+  const round = await getCurrentRound();
   res.json(round);
 });
 
@@ -49,14 +42,13 @@ app.get("/api/allowedWord/:word", async (req, res) => {
     result: Array(5).fill(""),
   };
 
-  const words = readWordsFromFile("allowedGuesses.txt");
+  const isAllowed = await allowedWord(req.params.word);
 
-  console.log(words);
-
-  if (words.includes(req.params.word)) {
+  if (isAllowed) {
     responseObj.success = true;
 
-    const correctWord = await getCurrentRound().word;
+    const currentRound = await getCurrentRound();
+    const correctWord = currentRound.word;
 
     for (let i = 0; i < 5; i++) {
       if (responseObj.guess[i].toUpperCase() === correctWord[i].toUpperCase()) {

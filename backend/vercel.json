@@ -23,5 +23,11 @@
     "api/index.js": {
       "includeFiles": "history.json allowedGuesses.txt selectedWords.txt"
     }
-  }
+  },
+  "crons": [
+    {
+      "path": "/cron",
+      "schedule": "0 4 * * *"
+    }
+  ]
 }

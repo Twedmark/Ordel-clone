@@ -3,8 +3,10 @@ const path = require("path");
 
 const readWordsFromFile = (filename) => {
   try {
-    const configDirectory = path.join(process.cwd(), filename);
-    const data = fs.readFileSync(configDirectory, "utf8");
+    // const configDirectory = path.join(process.cwd(), filename);
+    // const data = fs.readFileSync(configDirectory, "utf8");
+
+    const data = fs.readFileSync(filename, "utf8");
     // returns to uppercase because the frontend needs the words in uppercase
     return data
       .toUpperCase()
@@ -15,6 +17,19 @@ const readWordsFromFile = (filename) => {
     return [];
   }
 };
+
+// function changeFromTxtToJson() {
+//   const words = readWordsFromFile("../allowedGuesses.txt");
+//   const data = JSON.stringify(words, null, 2);
+//   fs.writeFile("allowedGuesses.json", data, (err) => {
+//     if (err) {
+//       console.error("Error writing to file:", err);
+//       return;
+//     }
+//   });
+// }
+
+// changeFromTxtToJson();
 
 const getCurrentRound = () => {
   try {
