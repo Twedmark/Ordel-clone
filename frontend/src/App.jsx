@@ -84,7 +84,7 @@ function App() {
 
         let gameOverStatus;
 
-        switch (localStorageData.pastGuesses) {
+        switch (localStorageData.pastGuesses.length) {
           case 0:
             gameOverStatus = false;
             break;
@@ -94,7 +94,7 @@ function App() {
           default:
             gameOverStatus = !localStorageData.pastGuesses[
               localStorageData.pastGuesses.length - 1
-            ].result.includes("-" || "W");
+            ].result?.includes("-" || "W");
         }
 
         setGameStatus({

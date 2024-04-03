@@ -109,7 +109,7 @@ function Gameboard({ loading }) {
               return { ...prevStatus, gameOver: true };
             });
             // window.alert("Rätt!!");
-            console.log("Corrent word!");
+            console.log("Correct word!");
             return;
           }
 
