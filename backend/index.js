@@ -46,15 +46,20 @@ app.get("/api/allowedWord/:word", async (req, res) => {
   };
 
   console.time("DB allowedWord");
-  const isAllowed = await allowedWord(req.params.word);
+  // const isAllowed = await allowedWord(req.params.word);
+  const [currentRound, isAllowed] = await Promise.all([
+    getCurrentRound(),
+    allowedWord(req.params.word),
+  ]);
+
   console.timeEnd("DB allowedWord");
 
   if (isAllowed) {
     responseObj.success = true;
 
-    console.time("GET currentRound");
-    const currentRound = await getCurrentRound();
-    console.timeEnd("GET currentRound");
+    // console.time("GET currentRound");
+    // const currentRound = await getCurrentRound();
+    // console.timeEnd("GET currentRound");
     const correctWord = currentRound.word;
 
     for (let i = 0; i < 5; i++) {
