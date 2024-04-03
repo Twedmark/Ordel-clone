@@ -8,8 +8,6 @@ const { newRound } = require("../cron");
 const PORT = process.env.PORT || 3001;
 const app = express();
 
-const BASE_URL = process.env.ORIGIN;
-
 app.use(express.json());
 app.use(
   cors({
@@ -30,11 +28,11 @@ app.get("/", (req, res) => {
   res.json({ success: true });
 });
 
-app.get("/api/word", async (req, res) => {
-  console.log("GET /api/word");
-  const round = await getCurrentRound();
-  res.json(round);
-});
+// app.get("/api/word", async (req, res) => {
+//   console.log("GET /api/word");
+//   const round = await getCurrentRound();
+//   res.json(round);
+// });
 
 app.get("/api/allowedWord/:word", async (req, res) => {
   console.log("get /api/allowedWord");
