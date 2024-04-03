@@ -8,13 +8,13 @@ const { newRound } = require("../cron");
 const PORT = process.env.PORT || 3001;
 const app = express();
 
-const BASE_URL = process.env.ORIGIN || "https://localhost:3000";
+const BASE_URL = process.env.ORIGIN;
 
 app.use(express.json());
 app.use(
   cors({
     credentials: true,
-    origin: BASE_URL,
+    origin: "*",
     methods: ["GET", "POST"],
     allowedHeaders: ["Content-Type"],
   })
