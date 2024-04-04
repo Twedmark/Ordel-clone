@@ -7,59 +7,51 @@ const gameHistoryCollectionName = "gameHistory";
 const SelectedWordsCollectionName = "selectedWords";
 const allowedGuessesCollectionName = "allowedGuesses";
 
+const client = new MongoClient(mongoURI, {});
+
 async function getCurrentRound() {
   console.log("getCurrentRound");
-  const client = new MongoClient(mongoURI);
 
   try {
     await client.connect();
     const db = client.db(dbNameWords);
     const collection = db.collection(gameHistoryCollectionName);
 
-    const latestRound = await collection
-      .find()
-      .sort({ _id: -1 })
-      .limit(1)
-      .toArray();
-
-    console.log(latestRound);
-
-    return latestRound[0];
+    const latestRound = await collection.findOne({}, { sort: { _id: -1 } });
+    return latestRound;
   } catch (error) {
     console.error("Error getting current round:", error);
-  } finally {
-    await client.close();
   }
 }
 
 async function allowedWord(word) {
   console.log("allowedWord");
-  const client = new MongoClient(mongoURI);
 
   try {
     await client.connect();
     const db = client.db(dbNameWords);
     const collection = db.collection(allowedGuessesCollectionName);
+    console.log("word", word);
 
     console.time("searchTime");
-    const result = await collection.findOne({ word });
+    let options;
+    if (word[0] === RegExp(/[A-M]/i)) {
+      options = { sort: { word: 1 } };
+    } else {
+      options = { sort: { word: -1 } };
+    }
+
+    const result = await collection.findOne({ word: word }, null, options);
     console.timeEnd("searchTime");
 
-    if (result) {
-      return true;
-    } else {
-      return false;
-    }
+    return !!result;
   } catch (error) {
     console.error("Error searching for word:", error);
-  } finally {
-    await client.close();
   }
 }
 
 // async function newRound() {
 //   console.log("newRound");
-//   const client = new MongoClient(mongoURI);
 
 //   try {
 //     await client.connect();
@@ -89,8 +81,6 @@ async function allowedWord(word) {
 //     return newRound;
 //   } catch (error) {
 //     console.error("Error updating game history:", error);
-//   } finally {
-//     await client.close();
 //   }
 // }
 

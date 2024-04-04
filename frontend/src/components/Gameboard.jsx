@@ -11,9 +11,6 @@ function Gameboard({ loading }) {
   // used to shake the active row, if the input is wrong in some way
   const [animate, setAnimate] = useState(false);
 
-  console.log(gameState);
-  console.log(gameStatus);
-
   useEffect(() => {
     const updateCurrentGuess = () => {
       dispatch({

@@ -46,40 +46,53 @@ app.get("/api/allowedWord/:word", async (req, res) => {
   };
 
   console.time("DB allowedWord");
-  // const isAllowed = await allowedWord(req.params.word);
-  const [currentRound, isAllowed] = await Promise.all([
-    getCurrentRound(),
-    allowedWord(req.params.word),
-  ]);
 
-  console.timeEnd("DB allowedWord");
+  try {
+    const allowedPromise = new Promise((resolve, reject) => {
+      allowedWord(req.params.word)
+        .then((result) => {
+          result ? resolve(true) : reject(false);
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    });
 
-  if (isAllowed) {
-    responseObj.success = true;
+    const [currentRound, isAllowed] = await Promise.all([
+      getCurrentRound(),
+      allowedPromise,
+    ]);
 
-    // console.time("GET currentRound");
-    // const currentRound = await getCurrentRound();
-    // console.timeEnd("GET currentRound");
-    const correctWord = currentRound.word;
+    console.timeEnd("DB allowedWord");
 
-    for (let i = 0; i < 5; i++) {
-      if (responseObj.guess[i].toUpperCase() === correctWord[i].toUpperCase()) {
-        responseObj.result[i] = "C";
-      } else if (correctWord.includes(responseObj.guess[i])) {
-        responseObj.result[i] = "W";
-      } else {
-        responseObj.result[i] = "-";
+    if (isAllowed) {
+      responseObj.success = true;
+
+      const correctWord = currentRound.word;
+
+      for (let i = 0; i < 5; i++) {
+        const guessChar = responseObj.guess[i].toUpperCase();
+        const correctChar = correctWord[i].toUpperCase();
+
+        if (guessChar === correctChar) {
+          responseObj.result[i] = "C";
+        } else if (correctWord.includes(guessChar)) {
+          responseObj.result[i] = "W";
+        } else {
+          responseObj.result[i] = "-";
+        }
       }
-    }
 
-    if (req.params.word === correctWord) {
-      responseObj.allCorrect = true;
+      responseObj.allCorrect =
+        req.params.word.toUpperCase() === correctWord.toUpperCase();
     }
 
     console.timeEnd("GET allowedWord");
     res.json(responseObj);
-  } else {
-    res.json({ success: false });
+  } catch (error) {
+    console.error("Error processing allowed word:", error);
+    res.status(500).json({ success: false, error: "Internal Server Error" });
+    console.timeEnd("GET allowedWord");
   }
 });
 
