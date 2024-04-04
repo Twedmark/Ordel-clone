@@ -42,7 +42,7 @@ async function allowedWord(word) {
     const collection = db.collection(allowedGuessesCollectionName);
 
     console.time("searchTime");
-    const result = await collection.findOne({ word });
+    const result = await collection.findOne({ word }).hint("word_1").limit(1);
     console.timeEnd("searchTime");
 
     if (result) {
