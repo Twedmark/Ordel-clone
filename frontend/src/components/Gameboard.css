@@ -46,6 +46,26 @@
   user-select: none;
   border: 1px solid black;
   transition: background 0.2s;
+  backface-visibility: hidden;
+  position: relative;
+  -webkit-transform-style: preserve-3d;
+  transform-style: preserve-3d;
+  -webkit-backface-visibility: hidden;
+}
+.tile::after {
+  content: "";
+  right: 0px;
+  bottom: 0px;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  background: hotpink;
+  -webkit-transform: rotateY(180deg);
+  -webkit-transform-style: preserve-3d;
+  -webkit-backface-visibility: hidden;
+  transform: rotateY(180deg);
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
 }
 
 .tiles div span {
@@ -79,6 +99,32 @@
   animation: blinking 2.2s infinite;
 }
 
+.tile.loading {
+  animation: spinning 0.3s infinite var(--animation-delay);
+}
+
+.tile.loaded {
+  animation: lastTurn 0.9s 1;
+}
+
+@keyframes lastTurn {
+  0% {
+    transform: rotate3d(0, 1, 0, 360deg);
+  }
+  100% {
+    transform: rotate3d(0, 1, 0, 0);
+  }
+}
+
+@keyframes spinning {
+  0% {
+    transform: rotate3d(0, 1, 0, 0deg);
+  }
+  100% {
+    transform: rotate3d(0, 1, 0, 360deg);
+  }
+}
+
 @keyframes blinking {
   0% {
     background: #939599;
@@ -94,7 +140,6 @@
   }
 }
 
-/* animation shake list to right  */
 @keyframes shake {
   0% {
     transform: translateX(0);

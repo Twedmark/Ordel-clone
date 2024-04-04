@@ -31,8 +31,8 @@ function Gameboard({ loading }) {
       });
     };
 
-    updateCurrentGuess();
-  }, [rows, gameStatus, dispatch]);
+    if (!loading) updateCurrentGuess();
+  }, [rows, gameStatus, dispatch, loading]);
 
   return (
     <section className="mainGrid">
@@ -79,7 +79,7 @@ const makeRow = (
     if (isActiveRow) {
       className += " active";
     }
-    if (isActiveRow && row[i] === "" && activeSquare && !gameOver) {
+    if (isActiveRow && row[i] === "" && activeSquare && !gameOver && !loading) {
       activeSquare = false;
       className += " activeSquare";
     }
@@ -97,8 +97,15 @@ const makeRow = (
       className += " wrong";
     }
 
+    const animationDelay = `${(index * 5 + i) * 0.05}s`;
+    const style = {
+      "--animation-delay": animationDelay,
+    };
+
+    className += " loading";
+
     tiles.push(
-      <div key={i} className={className}>
+      <div key={i} className={className} style={style}>
         <span>{row[i]}</span>
       </div>
     );

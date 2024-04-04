@@ -2,8 +2,8 @@ require("dotenv").config();
 
 const express = require("express");
 const cors = require("cors");
-const { getCurrentRound, allowedWord } = require("./db");
-const { newRound } = require("./cron");
+const { getCurrentRound, allowedWord, newRound } = require("./db");
+const cron = require("node-cron");
 
 const PORT = process.env.PORT || 3001;
 const app = express();
@@ -22,8 +22,6 @@ app.listen(PORT, () => {
   console.log(`Server listening on ${PORT}`);
 });
 
-app.use("/cron", newRound);
-
 app.get("/", (req, res) => {
   res.json({ success: true });
 });
@@ -31,7 +29,9 @@ app.get("/", (req, res) => {
 app.get("/api/word", async (req, res) => {
   console.log("GET /api/word");
   const round = await getCurrentRound();
+  // setTimeout(async () => {
   res.json(round);
+  // }, 3000);
 });
 
 app.get("/api/allowedWord/:word", async (req, res) => {
@@ -90,16 +90,25 @@ app.get("/api/allowedWord/:word", async (req, res) => {
     console.timeEnd("GET allowedWord");
     res.json(responseObj);
   } catch (error) {
-    console.error("Error processing allowed word:", error);
-    res.status(500).json({ success: false, error: "Word not allowed" });
-    console.timeEnd("GET allowedWord");
+    if (error === false) {
+      res.status(200).json({ success: false, error: "Word not allowed" });
+      console.timeEnd("GET allowedWord");
+    } else {
+      console.error("Error processing allowed word:", error);
+      res.status(500).json({ success: false, error: "Internal server error" });
+      console.timeEnd("GET allowedWord");
+    }
   }
 });
 
-app.get("/api/test", (req, res) => {
+// cron.schedule("* * * * *", () => {
+//   console.log("running a task every minute");
+// });
+
+app.get("/api/test", async (req, res) => {
   console.log("GET /api/test");
 
-  let text = newRound();
+  let text = await newRound();
 
-  res.json({ success: true });
+  res.json(text);
 });

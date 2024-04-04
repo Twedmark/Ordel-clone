@@ -4,8 +4,8 @@ const mongoURI = process.env.MONGO_URI;
 
 const dbNameWords = "Words";
 const gameHistoryCollectionName = "gameHistory";
-const SelectedWordsCollectionName = "selectedWords";
 const allowedGuessesCollectionName = "allowedGuesses";
+const SelectedWordsCollectionName = "selectedWords";
 
 const client = new MongoClient(mongoURI, {});
 
@@ -84,4 +84,41 @@ async function allowedWord(word) {
 //   }
 // }
 
-module.exports = { allowedWord, getCurrentRound };
+async function newRound() {
+  console.log("newRound");
+  const client = new MongoClient(mongoURI);
+
+  try {
+    await client.connect();
+    const db = client.db(dbNameWords);
+    const gameHistoryCollection = db.collection(gameHistoryCollectionName);
+    const wordsCollection = db.collection(SelectedWordsCollectionName);
+
+    const latestRound = await gameHistoryCollection
+      .find()
+      .sort({ _id: -1 })
+      .limit(1)
+      .toArray();
+
+    const roundNumber =
+      latestRound.length > 0 ? latestRound[0].roundNumber + 1 : 1;
+
+    const words = await wordsCollection.find().toArray();
+    const chosenWord = words[(roundNumber - 1) % words.length].word;
+
+    const newRound = {
+      date: new Date().toDateString(),
+      roundNumber,
+      word: chosenWord,
+    };
+
+    await gameHistoryCollection.insertOne({ ...newRound });
+    return newRound;
+  } catch (error) {
+    console.error("Error updating game history:", error);
+  } finally {
+    await client.close();
+  }
+}
+
+module.exports = { newRound, allowedWord, getCurrentRound };

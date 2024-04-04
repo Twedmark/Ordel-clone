@@ -45,21 +45,28 @@ function App() {
 
   useEffect(() => {
     const fetchServerData = async () => {
+      console.log("Fetching server data");
+
       abortControllerRef.current?.abort();
       abortControllerRef.current = new AbortController();
 
-      const serverData = fetch(BASE_URL + "api/word", {
+      const serverData = await fetch(BASE_URL + "api/word", {
         signal: abortControllerRef.current.signal,
       })
         .then((res) => res.json())
         .catch((error) => {
-          if (error.name === "AbortError") return;
+          if (error.name === "AbortError") {
+            console.log("Fetch aborted");
+            return;
+          }
           console.log("Error fetching server data:", error);
           setError(true);
         });
 
       const localStorageData =
         JSON.parse(localStorage.getItem("gameState")) || initialState;
+
+      console.log(serverData);
 
       if (localStorageData.round === serverData.roundNumber) {
         dispatch({ type: "INITIALIZE_GAME", payload: localStorageData });
@@ -109,15 +116,22 @@ function App() {
         localStorage.setItem("gameState", JSON.stringify(newState));
         dispatch({ type: "INITIALIZE_GAME", payload: newState });
       }
-      setTimeout(() => {
-        console.log("isInitialized");
+
+      if (!error) {
         setIsInitialized(true);
-      }, 10000);
-      // setIsInitialized(true);
+
+        const tiles = document.querySelectorAll(".tile.loading");
+        tiles.forEach((tile, index) => {
+          setTimeout(() => {
+            tile.classList.remove("loading");
+            tile.classList.add("loaded");
+          }, index * 100);
+        });
+      }
     };
 
     fetchServerData();
-  }, []);
+  }, [error]);
 
   useEffect(() => {
     if (isInitialized) {
