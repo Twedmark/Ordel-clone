@@ -76,18 +76,21 @@
 
 .tile.activeSquare {
   background: #616162;
-  animation: blinking 2.5s infinite;
+  animation: blinking 2.2s infinite;
 }
 
 @keyframes blinking {
   0% {
-    background: #616162;
-  }
-  50% {
     background: #939599;
   }
+  35% {
+    background: #5a5a5d;
+  }
+  65% {
+    background: #5a5a5d;
+  }
   100% {
-    background: #616162;
+    background: #939599;
   }
 }
 

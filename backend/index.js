@@ -91,7 +91,7 @@ app.get("/api/allowedWord/:word", async (req, res) => {
     res.json(responseObj);
   } catch (error) {
     console.error("Error processing allowed word:", error);
-    res.status(500).json({ success: false, error: "Internal Server Error" });
+    res.status(500).json({ success: false, error: "Word not allowed" });
     console.timeEnd("GET allowedWord");
   }
 });

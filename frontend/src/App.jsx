@@ -109,7 +109,11 @@ function App() {
         localStorage.setItem("gameState", JSON.stringify(newState));
         dispatch({ type: "INITIALIZE_GAME", payload: newState });
       }
-      setIsInitialized(true);
+      setTimeout(() => {
+        console.log("isInitialized");
+        setIsInitialized(true);
+      }, 10000);
+      // setIsInitialized(true);
     };
 
     fetchServerData();
@@ -130,7 +134,7 @@ function App() {
       <RowContext.Provider value={{ rows, setRows }}>
         <ActiveRowContext.Provider value={{ gameStatus, setGameStatus }}>
           <div className="App">
-            <Home loading={isInitialized} />
+            <Home loading={!isInitialized} />
           </div>
         </ActiveRowContext.Provider>
       </RowContext.Provider>
