@@ -46,6 +46,11 @@ function App() {
   useEffect(() => {
     const fetchServerData = async () => {
       console.log("Fetching server data");
+      console.time("fetchServerData");
+      const tiles = document.querySelectorAll(".tile");
+      tiles.forEach((tile, index) => {
+        tile.classList.add("loading");
+      });
 
       abortControllerRef.current?.abort();
       abortControllerRef.current = new AbortController();
@@ -57,6 +62,7 @@ function App() {
         .catch((error) => {
           if (error.name === "AbortError") {
             console.log("Fetch aborted");
+            console.timeEnd("fetchServerData");
             return;
           }
           console.log("Error fetching server data:", error);
@@ -119,6 +125,8 @@ function App() {
 
       if (!error) {
         setIsInitialized(true);
+        console.log("Server data fetched");
+        console.timeEnd("fetchServerData");
 
         const tiles = document.querySelectorAll(".tile.loading");
         tiles.forEach((tile, index) => {
@@ -127,6 +135,9 @@ function App() {
             tile.classList.add("loaded");
           }, index * 100);
         });
+      } else {
+        setIsInitialized(false);
+        console.timeEnd("fetchServerData");
       }
     };
 
@@ -140,7 +151,11 @@ function App() {
   }, [gameState, isInitialized]);
 
   if (error) {
-    return <h1>Error fetching data please try again</h1>;
+    return (
+      <div className="app">
+        <h1>Error fetching data please try again</h1>
+      </div>
+    );
   }
 
   return (

@@ -101,9 +101,12 @@ app.get("/api/allowedWord/:word", async (req, res) => {
   }
 });
 
-// cron.schedule("* * * * *", () => {
-//   console.log("running a task every minute");
-// });
+// cron.schedule("0 5 * * *", () => {
+cron.schedule("41 11 * * *", async () => {
+  console.log("Running new round cron job");
+  const Round = await newRound();
+  console.log(Round);
+});
 
 app.get("/api/test", async (req, res) => {
   console.log("GET /api/test");

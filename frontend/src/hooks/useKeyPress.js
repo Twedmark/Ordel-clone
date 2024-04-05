@@ -55,6 +55,10 @@ const handleKeyPress = (
         console.log("Please fill in all fields!");
         return;
       }
+      const tiles = document.querySelectorAll(".tile.active");
+      tiles.forEach((tile, index) => {
+        tile.classList.add("loading");
+      });
 
       console.time("fetchTime");
       const response = await fetch(`${BASE_URL}api/allowedWord/${guess}`).then(

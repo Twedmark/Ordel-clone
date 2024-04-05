@@ -20,7 +20,8 @@ function Gameboard({ loading }) {
     setRows,
     dispatch,
     setGameStatus,
-    BASE_URL
+    BASE_URL,
+    animate
   );
 
   useEffect(() => {
@@ -101,8 +102,6 @@ const makeRow = (
     const style = {
       "--animation-delay": animationDelay,
     };
-
-    className += " loading";
 
     tiles.push(
       <div key={i} className={className} style={style}>

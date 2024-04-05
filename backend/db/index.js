@@ -105,6 +105,7 @@ async function newRound() {
 
     const words = await wordsCollection.find().toArray();
     const chosenWord = words[(roundNumber - 1) % words.length].word;
+    console.log("Chosen word ", chosenWord);
 
     const newRound = {
       date: new Date().toDateString(),
@@ -112,10 +113,11 @@ async function newRound() {
       word: chosenWord,
     };
 
-    await gameHistoryCollection.insertOne({ ...newRound });
+    let insert = await gameHistoryCollection.insertOne({ ...newRound });
+    console.log("Insert one ", insert);
     return newRound;
   } catch (error) {
-    console.error("Error updating game history:", error);
+    console.error("Error updating game history: ", error);
   } finally {
     await client.close();
   }
