@@ -1,3 +1,6 @@
 {
-  "cSpell.words": ["Gameboard"]
+  "cSpell.words": ["Gameboard"],
+  "appService.zipIgnorePattern": ["node_modules{,/**}", ".vscode{,/**}"],
+  "appService.defaultWebAppToDeploy": "/subscriptions/80eebcca-1fb5-4664-8d6f-ca8cff6c3480/resourceGroups/BackendWordle/providers/Microsoft.Web/sites/WordleBackend",
+  "appService.deploySubpath": "backend"
 }

@@ -5,8 +5,6 @@ import { gameStateReducer, initialState } from "./reducers/gameStateReducer";
 
 const BASE_URL = process.env.REACT_APP_BASE_URL;
 
-// i want to look for a cookie and if it exists and have the same round number as the server, then i want to use that cookie
-
 export const GameContext = createContext();
 export const RowContext = createContext();
 export const ActiveRowContext = createContext();
@@ -42,6 +40,23 @@ function App() {
     gameOver: false,
   });
   const [gameState, dispatch] = useReducer(gameStateReducer, initialState);
+
+  useEffect(() => {
+    const fetchTry = async () => {
+      console.log("fetchTry");
+      try {
+        const response = await fetch(BASE_URL);
+        const data = await response.json();
+
+        console.log("fetchtry data ", data);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        setError(true);
+      }
+    };
+
+    fetchTry();
+  }, []);
 
   useEffect(() => {
     const fetchServerData = async () => {
@@ -128,12 +143,12 @@ function App() {
         console.log("Server data fetched");
         console.timeEnd("fetchServerData");
 
-        const tiles = document.querySelectorAll(".tile.loading");
+        const tiles = document.querySelectorAll(".tile");
         tiles.forEach((tile, index) => {
           setTimeout(() => {
             tile.classList.remove("loading");
             tile.classList.add("loaded");
-          }, index * 100);
+          }, index * 80);
         });
       } else {
         setIsInitialized(false);

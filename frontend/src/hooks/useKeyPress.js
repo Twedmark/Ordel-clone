@@ -56,7 +56,7 @@ const handleKeyPress = (
         return;
       }
       const tiles = document.querySelectorAll(".tile.active");
-      tiles.forEach((tile, index) => {
+      tiles.forEach((tile) => {
         tile.classList.add("loading");
       });
 

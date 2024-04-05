@@ -46,11 +46,11 @@
   user-select: none;
   border: 1px solid black;
   transition: background 0.2s;
-  backface-visibility: hidden;
   position: relative;
   -webkit-transform-style: preserve-3d;
   transform-style: preserve-3d;
   -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
 }
 .tile::after {
   content: "";
@@ -61,11 +61,22 @@
   left: 0px;
   background: hotpink;
   -webkit-transform: rotateY(180deg);
-  -webkit-transform-style: preserve-3d;
-  -webkit-backface-visibility: hidden;
   transform: rotateY(180deg);
+
+  -webkit-transform-style: preserve-3d;
   transform-style: preserve-3d;
+  -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
+}
+
+.tile.activeSquare::before {
+  background-color: aqua;
+  bottom: 0.5rem;
+  content: "";
+  height: 0.2rem;
+  left: 1rem;
+  position: absolute;
+  right: 1rem;
 }
 
 .tiles div span {
@@ -96,20 +107,28 @@
 
 .tile.activeSquare {
   background: #616162;
-  animation: blinking 2.2s infinite;
+}
+
+.tile.activeSquare::before {
+  animation: blinking 1.5s infinite;
 }
 
 .tile.loading {
-  animation: spinning 0.3s infinite var(--animation-delay);
+  animation: buzz 0.15s infinite var(--animation-delay);
+  -webkit-transform: rotateY(180deg);
+  transform: rotateY(180deg);
 }
 
 .tile.loaded {
-  animation: lastTurn 0.9s 1;
+  -webkit-transform: rotateY(180deg);
+  transform: rotateY(180deg);
+  animation: lastTurn 0.8s 1;
+  animation-fill-mode: forwards;
 }
 
 @keyframes lastTurn {
   0% {
-    transform: rotate3d(0, 1, 0, 360deg);
+    transform: rotate3d(0, 1, 0, 180deg);
   }
   100% {
     transform: rotate3d(0, 1, 0, 0);
@@ -127,16 +146,52 @@
 
 @keyframes blinking {
   0% {
-    background: #939599;
+    background: #747575;
   }
   35% {
-    background: #5a5a5d;
+    background: #afafaf;
   }
   65% {
-    background: #5a5a5d;
+    background: #afafaf;
   }
   100% {
-    background: #939599;
+    background: #747575;
+  }
+}
+
+@keyframes buzz {
+  0% {
+    transform: translate(0, 0) rotateY(180deg);
+  }
+  10% {
+    transform: translate(1px, 0) rotateY(180deg);
+  }
+  20% {
+    transform: translate(1px, 1px) rotateY(180deg);
+  }
+  30% {
+    transform: translate(0, 1px) rotateY(180deg);
+  }
+  40% {
+    transform: translate(-1px, 1px) rotateY(180deg);
+  }
+  50% {
+    transform: translate(-1px, 0) rotateY(180deg);
+  }
+  60% {
+    transform: translate(-1px, -1px) rotateY(180deg);
+  }
+  70% {
+    transform: translate(0, -1px) rotateY(180deg);
+  }
+  80% {
+    transform: translate(1px, -1px) rotateY(180deg);
+  }
+  90% {
+    transform: translate(1px, 0) rotateY(180deg);
+  }
+  100% {
+    transform: translate(0, 0) rotateY(180deg);
   }
 }
 

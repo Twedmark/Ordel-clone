@@ -77,6 +77,13 @@ const makeRow = (
     const wrongPlace = result[i] === "W";
 
     let className = "tile";
+
+    const tilesData = document.querySelectorAll(".tile");
+
+    if (tilesData[index]?.classList.contains("loading")) {
+      className += " loading";
+    }
+
     if (isActiveRow) {
       className += " active";
     }
@@ -84,8 +91,7 @@ const makeRow = (
       activeSquare = false;
       className += " activeSquare";
     }
-
-    if (animate) {
+    if (animate && isActiveRow) {
       className += " animate";
     }
     if (isCorrect) {
@@ -98,7 +104,7 @@ const makeRow = (
       className += " wrong";
     }
 
-    const animationDelay = `${(index * 5 + i) * 0.05}s`;
+    const animationDelay = `${-1 - (index * 5 + i) * 2.03}s`;
     const style = {
       "--animation-delay": animationDelay,
     };
