@@ -118,7 +118,7 @@ function App() {
 
             console.log(
               "test",
-              !localStorageData.pastGuesses[
+              localStorageData.pastGuesses[
                 localStorageData.pastGuesses.length - 1
               ].result?.includes("-" || "W")
             );
