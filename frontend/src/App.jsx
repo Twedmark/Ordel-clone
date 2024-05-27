@@ -96,7 +96,7 @@ function App() {
           return newRows;
         });
 
-        let gameOverStatus;
+        let gameOverStatus = false;
 
         console.log("localStorageData", localStorageData);
         console.log("past Guesses length", localStorageData.pastGuesses.length);
