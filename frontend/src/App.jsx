@@ -109,22 +109,19 @@ function App() {
             gameOverStatus = true;
             break;
           default:
-            console.log(
-              "last guess",
-              localStorageData.pastGuesses[
-                localStorageData.pastGuesses.length - 1
-              ]
-            );
-
-            console.log(
-              "test",
-              localStorageData.pastGuesses[
-                localStorageData.pastGuesses.length - 1
-              ].result?.includes("-" || "W")
-            );
+            // set to false if the last guess dose not contain "-" or "W"
             gameOverStatus = !localStorageData.pastGuesses[
               localStorageData.pastGuesses.length - 1
             ].result?.includes("-" || "W");
+
+            console.log("gameOverStatus", gameOverStatus);
+            console.log(
+              "test",
+              !localStorageData.pastGuesses[
+                localStorageData.pastGuesses.length - 1
+              ].result?.includes("-" || "W")
+            );
+            break;
         }
 
         console.log("gameOverStatus", gameOverStatus);
