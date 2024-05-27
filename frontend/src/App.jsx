@@ -111,6 +111,8 @@ function App() {
             ].result?.includes("-" || "W");
         }
 
+        console.log("gameOverStatus", gameOverStatus);
+
         setGameStatus({
           activeRow: localStorageData.pastGuesses.length,
           gameOver: gameOverStatus,
