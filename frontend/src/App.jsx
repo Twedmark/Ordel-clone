@@ -1,5 +1,6 @@
 import "./App.css";
 import Home from "./pages/Home";
+import Header from "./layout/Header";
 import { createContext, useEffect, useReducer, useState, useRef } from "react";
 import { gameStateReducer, initialState } from "./reducers/gameStateReducer";
 
@@ -42,26 +43,8 @@ function App() {
   const [gameState, dispatch] = useReducer(gameStateReducer, initialState);
 
   useEffect(() => {
-    const fetchTry = async () => {
-      console.log("fetchTry");
-      try {
-        const response = await fetch(BASE_URL);
-        const data = await response.json();
-
-        console.log("fetchtry data ", data);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-        setError(true);
-      }
-    };
-
-    fetchTry();
-  }, []);
-
-  useEffect(() => {
     const fetchServerData = async () => {
       console.log("Fetching server data");
-      console.time("fetchServerData");
       const tiles = document.querySelectorAll(".tile");
       tiles.forEach((tile, index) => {
         tile.classList.add("loading");
@@ -77,17 +60,20 @@ function App() {
         .catch((error) => {
           if (error.name === "AbortError") {
             console.log("Fetch aborted");
-            console.timeEnd("fetchServerData");
             return;
           }
           console.log("Error fetching server data:", error);
+          console.log(BASE_URL + "api/word");
+          // console.log("Retrying in 5 seconds");
+          // setTimeout(() => fetchServerData(), 5000);
+
           setError(true);
         });
 
       const localStorageData =
         JSON.parse(localStorage.getItem("gameState")) || initialState;
 
-      console.log(serverData);
+      console.log("serverData", serverData);
 
       if (localStorageData.round === serverData.roundNumber) {
         dispatch({ type: "INITIALIZE_GAME", payload: localStorageData });
@@ -140,19 +126,16 @@ function App() {
 
       if (!error) {
         setIsInitialized(true);
-        console.log("Server data fetched");
-        console.timeEnd("fetchServerData");
 
         const tiles = document.querySelectorAll(".tile");
         tiles.forEach((tile, index) => {
           setTimeout(() => {
             tile.classList.remove("loading");
             tile.classList.add("loaded");
-          }, index * 80);
+          }, index * 60);
         });
       } else {
         setIsInitialized(false);
-        console.timeEnd("fetchServerData");
       }
     };
 
@@ -178,6 +161,7 @@ function App() {
       <RowContext.Provider value={{ rows, setRows }}>
         <ActiveRowContext.Provider value={{ gameStatus, setGameStatus }}>
           <div className="App">
+            <Header />
             <Home loading={!isInitialized} />
           </div>
         </ActiveRowContext.Provider>

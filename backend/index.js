@@ -36,7 +36,6 @@ app.get("/api/word", async (req, res) => {
 
 app.get("/api/allowedWord/:word", async (req, res) => {
   console.log("get /api/allowedWord");
-  console.time("GET allowedWord");
 
   const responseObj = {
     success: false,
@@ -45,7 +44,9 @@ app.get("/api/allowedWord/:word", async (req, res) => {
     result: Array(5).fill(""),
   };
 
-  console.time("DB allowedWord");
+  // const wait = (t) => new Promise((resolve, reject) => setTimeout(resolve, t));
+
+  // const wait2sec = await wait(6000);
 
   try {
     const allowedPromise = new Promise((resolve, reject) => {
@@ -62,8 +63,6 @@ app.get("/api/allowedWord/:word", async (req, res) => {
       getCurrentRound(),
       allowedPromise,
     ]);
-
-    console.timeEnd("DB allowedWord");
 
     if (isAllowed) {
       responseObj.success = true;
@@ -87,22 +86,19 @@ app.get("/api/allowedWord/:word", async (req, res) => {
         req.params.word.toUpperCase() === correctWord.toUpperCase();
     }
 
-    console.timeEnd("GET allowedWord");
     res.json(responseObj);
   } catch (error) {
     if (error === false) {
       res.status(200).json({ success: false, error: "Word not allowed" });
-      console.timeEnd("GET allowedWord");
     } else {
       console.error("Error processing allowed word:", error);
       res.status(500).json({ success: false, error: "Internal server error" });
-      console.timeEnd("GET allowedWord");
     }
   }
 });
 
-// cron.schedule("0 5 * * *", () => {
-cron.schedule("41 11 * * *", async () => {
+cron.schedule("0 5 * * *", async () => {
+  // cron.schedule("41 11 * * *", async () => {
   console.log("Running new round cron job");
   const Round = await newRound();
   console.log(Round);

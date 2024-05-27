@@ -124,14 +124,15 @@ function Keyboard() {
             >
               Play
             </button>
+            <button
+              className="key test"
+              onClick={() => {
+                testingFunction();
+              }}
+            >
+              Test
+            </button>
           </div>
-          <button
-            onClick={() => {
-              testingFunction();
-            }}
-          >
-            Test
-          </button>
         </>
       ) : (
         ""

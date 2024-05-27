@@ -33,7 +33,6 @@ async function allowedWord(word) {
     const collection = db.collection(allowedGuessesCollectionName);
     console.log("word", word);
 
-    console.time("searchTime");
     let options;
     if (word[0] === RegExp(/[A-M]/i)) {
       options = { sort: { word: 1 } };
@@ -42,7 +41,6 @@ async function allowedWord(word) {
     }
 
     const result = await collection.findOne({ word: word }, null, options);
-    console.timeEnd("searchTime");
 
     return !!result;
   } catch (error) {

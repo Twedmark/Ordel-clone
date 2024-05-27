@@ -14,6 +14,7 @@
   flex-direction: column;
   flex-grow: 1;
   margin: auto;
+  min-height: 50%;
   max-height: 80%;
   max-width: 100%;
 }

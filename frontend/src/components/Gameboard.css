@@ -54,15 +54,21 @@
 }
 .tile::after {
   content: "";
+  border-radius: 0.5rem;
   right: 0px;
   bottom: 0px;
   position: absolute;
   top: 0px;
   left: 0px;
-  background: hotpink;
+  border: 3px solid black;
+  background: repeating-conic-gradient(
+    #0369a1 0deg,
+    #ffffff 1deg,
+    #0369a1 2deg
+  );
+
   -webkit-transform: rotateY(180deg);
   transform: rotateY(180deg);
-
   -webkit-transform-style: preserve-3d;
   transform-style: preserve-3d;
   -webkit-backface-visibility: hidden;
@@ -114,7 +120,7 @@
 }
 
 .tile.loading {
-  animation: buzz 0.15s infinite var(--animation-delay);
+  animation: buzz 0.4s infinite var(--animation-delay);
   -webkit-transform: rotateY(180deg);
   transform: rotateY(180deg);
 }
@@ -124,6 +130,10 @@
   transform: rotateY(180deg);
   animation: lastTurn 0.8s 1;
   animation-fill-mode: forwards;
+}
+
+.tile.spin {
+  animation: spinning 1s infinite linear;
 }
 
 @keyframes lastTurn {

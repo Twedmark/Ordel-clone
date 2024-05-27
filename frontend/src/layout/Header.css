@@ -1,0 +1,41 @@
+.footerContainer {
+  color: #fff;
+  background-color: #1f2228;
+  display: flex;
+  flex-direction: row;
+  height: 8vh;
+  width: 100%;
+  padding-left: 2.5%;
+  padding-right: 2.5%;
+}
+
+.smallSection,
+.bigSection {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 1em;
+}
+
+.smallSection p {
+  font-size: 1.4em;
+  margin: 1px;
+}
+
+.smallSection h1 {
+  font-size: 3rem;
+  color: #0369a1;
+}
+.smallSection a {
+  color: #fff;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.smallSection a:hover {
+  text-decoration: underline;
+}
+
+.smallSection {
+  width: 100%;
+}

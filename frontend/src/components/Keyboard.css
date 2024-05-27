@@ -20,7 +20,8 @@ section {
     "Q Q Q Q Q Q Q Q . W W W W W W W W . E E E E E E E E . R R R R R R R R . T T T T T T T T . Y Y Y Y Y Y Y Y . U U U U U U U U . I I I I I I I I . O O O O O O O O . P P P P P P P P ." 1fr
     ". . A A A A A A A A . S S S S S S S S . D D D D D D D D . F F F F F F F F . G G G G G G G G . H H H H H H H H . J J J J J J J J . K K K K K K K K . L L L L L L L L . . . . . . . . " 1fr
     ". . . . Z Z Z Z Z Z Z Z . X X X X X X X X . C C C C C C C C . V V V V V V V V . B B B B B B B B . N N N N N N N N . M M M M M M M M . . . . . . . . . . BackSpace BackSpace BackSpace BackSpace BackSpace BackSpace BackSpace BackSpace BackSpace BackSpace BackSpace BackSpace BackSpace BackSpace" 1fr
-    ". . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . Enter Enter Enter Enter Enter Enter Enter Enter Enter Enter Enter Enter Enter Enter Enter Enter Enter Enter Enter Enter" 1fr;
+    /* ". . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . Enter Enter Enter Enter Enter Enter Enter Enter Enter Enter Enter Enter Enter Enter Enter Enter Enter Enter Enter Enter" 1fr; */
+    "Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test Test . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . Enter Enter Enter Enter Enter Enter Enter Enter Enter Enter Enter Enter Enter Enter Enter Enter Enter Enter Enter Enter" 1fr;
 
   /* layout a grid for a swedish qwerty keyboard */
   /* grid-template-columns: repeat(11, 1fr); 18
@@ -58,6 +59,12 @@ section {
 .enter {
   background: #0369a1;
   grid-area: Enter;
+  width: 5rem;
+  text-transform: none;
+}
+.test {
+  background: #0369a1;
+  grid-area: Test;
   width: 5rem;
   text-transform: none;
 }
