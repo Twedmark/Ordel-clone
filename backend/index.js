@@ -78,6 +78,7 @@ app.get("/api/allowedWord/:word", async (req, res) => {
         } else if (correctWord.includes(guessChar)) {
           responseObj.result[i] = "W";
           correctWord[i] = "-";
+          console.log("correctWord", correctWord);
         } else {
           responseObj.result[i] = "-";
         }

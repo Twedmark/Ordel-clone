@@ -97,10 +97,6 @@ function App() {
         });
 
         let gameOverStatus = false;
-
-        console.log("localStorageData", localStorageData);
-        console.log("past Guesses length", localStorageData.pastGuesses.length);
-
         switch (localStorageData.pastGuesses.length) {
           case 0:
             gameOverStatus = false;
@@ -121,9 +117,6 @@ function App() {
 
             break;
         }
-
-        console.log("gameOverStatus", gameOverStatus);
-
         setGameStatus({
           activeRow: localStorageData.pastGuesses.length,
           gameOver: gameOverStatus,
