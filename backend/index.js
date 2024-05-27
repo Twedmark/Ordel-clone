@@ -67,7 +67,7 @@ app.get("/api/allowedWord/:word", async (req, res) => {
     if (isAllowed) {
       responseObj.success = true;
 
-      const correctWord = currentRound.word;
+      let correctWord = currentRound.word;
 
       for (let i = 0; i < 5; i++) {
         const guessChar = responseObj.guess[i].toUpperCase();
@@ -77,6 +77,7 @@ app.get("/api/allowedWord/:word", async (req, res) => {
           responseObj.result[i] = "C";
         } else if (correctWord.includes(guessChar)) {
           responseObj.result[i] = "W";
+          correctWord[i] = "-";
         } else {
           responseObj.result[i] = "-";
         }
