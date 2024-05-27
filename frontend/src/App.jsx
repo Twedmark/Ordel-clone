@@ -109,6 +109,19 @@ function App() {
             gameOverStatus = true;
             break;
           default:
+            console.log(
+              "last guess",
+              localStorageData.pastGuesses[
+                localStorageData.pastGuesses.length - 1
+              ]
+            );
+
+            console.log(
+              "test",
+              !localStorageData.pastGuesses[
+                localStorageData.pastGuesses.length - 1
+              ].result?.includes("-" || "W")
+            );
             gameOverStatus = !localStorageData.pastGuesses[
               localStorageData.pastGuesses.length - 1
             ].result?.includes("-" || "W");
