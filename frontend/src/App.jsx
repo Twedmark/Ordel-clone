@@ -109,18 +109,16 @@ function App() {
             gameOverStatus = true;
             break;
           default:
-            // set to false if the last guess dose not contain "-" or "W"
-            gameOverStatus = !localStorageData.pastGuesses[
-              localStorageData.pastGuesses.length - 1
-            ].result?.includes("-" || "W");
+            for (let i = 0; i < localStorageData.pastGuesses.length; i++) {
+              if (
+                !localStorageData.pastGuesses[i].result.includes("-") &&
+                !localStorageData.pastGuesses[i].result.includes("W")
+              ) {
+                gameOverStatus = true;
+                break;
+              }
+            }
 
-            console.log("gameOverStatus", gameOverStatus);
-            console.log(
-              "test",
-              !localStorageData.pastGuesses[
-                localStorageData.pastGuesses.length - 1
-              ].result?.includes("-" || "W")
-            );
             break;
         }
 
