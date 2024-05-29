@@ -2,7 +2,7 @@ require("dotenv").config();
 
 const express = require("express");
 const cors = require("cors");
-const { getCurrentRound, allowedWord, newRound } = require("./db");
+const { getCurrentRound, allowedWord, newRound } = require("..libs/index.js");
 const cron = require("node-cron");
 
 const PORT = process.env.PORT || 3001;
