@@ -98,12 +98,18 @@ app.get("/api/allowedWord/:word", async (req, res) => {
   }
 });
 
-cron.schedule("0 5 * * *", async () => {
-  // cron.schedule("41 11 * * *", async () => {
-  console.log("Running new round cron job");
-  const Round = await newRound();
-  console.log(Round);
-});
+cron.schedule(
+  "0 5 * * *",
+  async () => {
+    console.log("Running new round cron job");
+    // const Round = await newRound();
+    // console.log(Round);
+  },
+  {
+    scheduled: true,
+    timezone: "Europe/Stockholm",
+  }
+);
 
 app.get("/api/test", async (req, res) => {
   console.log("GET /api/test");
