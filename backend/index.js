@@ -118,3 +118,8 @@ app.get("/api/test", async (req, res) => {
 
   res.json(text);
 });
+
+app.get("cron", async (req, res) => {
+  console.log("Vercel cron test");
+  res.json({ success: true });
+});
