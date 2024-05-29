@@ -45,7 +45,6 @@ app.get("/api/allowedWord/:word", async (req, res) => {
   };
 
   // const wait = (t) => new Promise((resolve, reject) => setTimeout(resolve, t));
-
   // const wait2sec = await wait(6000);
 
   try {
