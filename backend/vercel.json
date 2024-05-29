@@ -5,6 +5,10 @@
     {
       "src": "/",
       "dest": "/api"
+    },
+    {
+      "src": "/api/word",
+      "dest": "/api/word"
     }
   ]
 }
