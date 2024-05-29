@@ -1,18 +1,4 @@
 {
   "version": 2,
-
-  "routes": [
-    {
-      "src": "/",
-      "dest": "/api"
-    },
-    {
-      "src": "/api/word",
-      "dest": "/api/word"
-    },
-    {
-      "src": "/api/word/:id",
-      "dest": "/api/word/:id"
-    }
-  ]
+  "rewrites": [{ "source": "/", "destination": "/api" }]
 }
