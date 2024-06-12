@@ -3,7 +3,6 @@ require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const { getCurrentRound, allowedWord, newRound } = require("../libs");
-const cron = require("node-cron");
 
 const PORT = process.env.PORT || 3001;
 const app = express();
@@ -97,30 +96,12 @@ app.get("/api/allowedWord/:word", async (req, res) => {
   }
 });
 
-cron.schedule(
-  "0 5 * * *",
-  async () => {
-    console.log("Running new round cron job");
-    // const Round = await newRound();
-    // console.log(Round);
-  },
-  {
-    scheduled: true,
-    timezone: "Europe/Stockholm",
-  }
-);
-
 app.get("/api/test", async (req, res) => {
   console.log("GET /api/test");
 
   let text = await newRound();
 
   res.json(text);
-});
-
-app.get("cron", async (req, res) => {
-  console.log("Vercel cron test");
-  res.json({ success: true });
 });
 
 module.exports = app;

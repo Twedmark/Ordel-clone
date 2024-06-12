@@ -1,3 +1,5 @@
-export default function handler(req, res) {
-  res.status(200).end("Hello Cron!");
+export default async function handler(req, res) {
+  let text = await newRound();
+
+  res.json(text);
 }
