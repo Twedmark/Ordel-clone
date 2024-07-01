@@ -12,7 +12,7 @@ function Footer() {
       </div>
 
       <div className="smallSection">
-        <a href="https://twedmark.github.io/">Portfolio</a>
+        <a href="https://twedmark.github.io/">My portfolio</a>
       </div>
     </nav>
   );
