@@ -2,7 +2,13 @@ require("dotenv").config();
 
 const express = require("express");
 const cors = require("cors");
-const { getCurrentRound, allowedWord, newRound } = require("../libs");
+const {
+  getCurrentRound,
+  allowedWord,
+  newRound,
+  currentRoundWin,
+  currentRoundLoss,
+} = require("../libs");
 
 const PORT = process.env.PORT || 3001;
 const app = express();
@@ -94,6 +100,23 @@ app.get("/api/allowedWord/:word", async (req, res) => {
       res.status(500).json({ success: false, error: "Internal server error" });
     }
   }
+});
+
+app.get("/api/win/:activeRow", async (req, res) => {
+  console.log("GET /api/win");
+  console.log(req.params.activeRow);
+
+  const stats = await currentRoundWin(req.params.activeRow);
+
+  res.json(stats);
+});
+
+app.get("/api/loss", async (req, res) => {
+  console.log("GET /api/loss");
+
+  const losses = await currentRoundLoss();
+
+  res.json(losses);
 });
 
 app.get("/api/test", async (req, res) => {

@@ -24,6 +24,69 @@ async function getCurrentRound() {
   }
 }
 
+async function currentRoundWin(activeRow) {
+  console.log("currentRoundWin");
+
+  const guesses = Number(activeRow) + 1;
+
+  try {
+    await client.connect();
+    const db = client.db(dbNameWords);
+    const collection = db.collection(gameHistoryCollectionName);
+
+    const latestRound = await collection.findOne({}, { sort: { _id: -1 } });
+    const roundNumber = latestRound.roundNumber;
+
+    const updatedRound = await collection.findOneAndUpdate(
+      { roundNumber },
+      {
+        $inc: { wins: 1, totalGuesses: guesses },
+      },
+      { returnDocument: "after" }
+    );
+
+    const stats = {
+      word: updatedRound.word,
+      roundNumber: updatedRound.roundNumber,
+      wins: updatedRound.wins,
+      totalGuesses: updatedRound.totalGuesses,
+    };
+    return stats;
+  } catch (error) {
+    console.error("Error updating current round:", error);
+  }
+}
+
+async function currentRoundLoss() {
+  console.log("currentRoundLoss");
+
+  try {
+    await client.connect();
+    const db = client.db(dbNameWords);
+    const collection = db.collection(gameHistoryCollectionName);
+
+    const latestRound = await collection.findOne({}, { sort: { _id: -1 } });
+    const roundNumber = latestRound.roundNumber;
+
+    const updatedRound = await collection.findOneAndUpdate(
+      { roundNumber },
+      {
+        $inc: { losses: 1 },
+      },
+      { returnDocument: "after" }
+    );
+
+    const stats = {
+      word: updatedRound.word,
+      roundNumber: updatedRound.roundNumber,
+      losses: updatedRound.losses,
+    };
+    return stats;
+  } catch (error) {
+    console.error("Error updating current round:", error);
+  }
+}
+
 async function allowedWord(word) {
   console.log("allowedWord");
 
@@ -75,6 +138,9 @@ async function newRound() {
       date: new Date().toDateString(),
       roundNumber,
       word: chosenWord,
+      wins: 0,
+      losses: 0,
+      totalGuesses: 0,
     };
 
     let insert = await gameHistoryCollection.insertOne({ ...newRound });
@@ -87,4 +153,10 @@ async function newRound() {
   }
 }
 
-module.exports = { newRound, allowedWord, getCurrentRound };
+module.exports = {
+  newRound,
+  allowedWord,
+  getCurrentRound,
+  currentRoundWin,
+  currentRoundLoss,
+};

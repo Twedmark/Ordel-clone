@@ -73,8 +73,6 @@ function App() {
       const localStorageData =
         JSON.parse(localStorage.getItem("gameState")) || initialState;
 
-      console.log("serverData", serverData);
-
       if (localStorageData.round === serverData.roundNumber) {
         dispatch({ type: "INITIALIZE_GAME", payload: localStorageData });
 

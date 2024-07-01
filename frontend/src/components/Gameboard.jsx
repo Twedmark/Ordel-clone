@@ -96,7 +96,13 @@ function Gameboard({ loading }) {
               return { ...prevStatus, gameOver: true };
             });
             // window.alert("Rätt!!");
+            const stats = await fetch(
+              `${BASE_URL}api/win/${gameStatus.activeRow}`
+            ).then((res) => {
+              return res.json();
+            });
             console.log("Correct word!");
+            console.log(stats);
             updateHistory(true, gameState, response, row);
             return;
           } else if (gameStatus.activeRow === 4 && !response.allCorrect) {
@@ -104,6 +110,10 @@ function Gameboard({ loading }) {
             const rightWord = await fetch(BASE_URL + "api/word").then((res) => {
               return res.json();
             });
+            const losses = await fetch(`${BASE_URL}api/loss`).then((res) => {
+              return res.json();
+            });
+            console.log(losses);
 
             window.alert(
               "Sorry that was wrong, the right word was: " + rightWord.word
