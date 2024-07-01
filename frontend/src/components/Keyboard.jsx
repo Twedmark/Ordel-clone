@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { RowContext } from "../App";
 import "./Keyboard.css";
 
-const BASE_URL = process.env.REACT_APP_BASE_URL;
+// const BASE_URL = process.env.REACT_APP_BASE_URL;
 
 function Keyboard() {
   const { rows } = useContext(RowContext);
@@ -38,11 +38,11 @@ function Keyboard() {
     M: "key",
   });
 
-  const testingFunction = () => {
-    fetch(BASE_URL + "api/test")
-      .then((res) => res.json())
-      .then((data) => console.log(data));
-  };
+  // const testingFunction = () => {
+  //   fetch(BASE_URL + "api/test")
+  //     .then((res) => res.json())
+  //     .then((data) => console.log(data));
+  // };
 
   useEffect(() => {
     const createClassName = () => {
@@ -124,14 +124,14 @@ function Keyboard() {
             >
               Play
             </button>
-            <button
+            {/* <button
               className="key test"
               onClick={() => {
                 testingFunction();
               }}
             >
               Test
-            </button>
+            </button> */}
           </div>
         </>
       ) : (

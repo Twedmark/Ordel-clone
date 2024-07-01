@@ -1,5 +1,5 @@
 {
-  "name": "Wordel clone",
+  "name": "Wordle clone",
   "version": "0.2.0",
   "private": true,
   "dependencies": {
