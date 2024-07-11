@@ -68,7 +68,10 @@ function App() {
           // setTimeout(() => fetchServerData(), 5000);
 
           setError(true);
+          return;
         });
+
+      if (!serverData) return;
 
       const localStorageData =
         JSON.parse(localStorage.getItem("gameState")) || initialState;
