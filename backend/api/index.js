@@ -18,7 +18,7 @@ app.use(express.json());
 app.use(
   cors({
     credentials: true,
-    origin: ["http://localhost:3000", "https://twedmarkwordle.vercel.app/"],
+    origin: ["http://localhost:3000", "https://twedmarkwordle.vercel.app"],
     methods: ["GET", "POST"],
     allowedHeaders: ["Content-Type"],
   })
