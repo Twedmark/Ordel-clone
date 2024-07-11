@@ -16,8 +16,30 @@ async function getCurrentRound() {
     await client.connect();
     const db = client.db(dbNameWords);
     const collection = db.collection(gameHistoryCollectionName);
-
     const latestRound = await collection.findOne({}, { sort: { _id: -1 } });
+
+    let response = {
+      roundNumber: latestRound.roundNumber,
+      wins: latestRound.wins,
+      losses: latestRound.losses,
+      totalGuesses: latestRound.totalGuess,
+      date: latestRound.date,
+    };
+    return response;
+  } catch (error) {
+    console.error("Error getting current round:", error);
+  }
+}
+
+async function getCurrentWord() {
+  console.log("getCurrentWord");
+
+  try {
+    await client.connect();
+    const db = client.db(dbNameWords);
+    const collection = db.collection(gameHistoryCollectionName);
+    const latestRound = await collection.findOne({}, { sort: { _id: -1 } });
+
     return latestRound;
   } catch (error) {
     console.error("Error getting current round:", error);
@@ -157,6 +179,7 @@ module.exports = {
   newRound,
   allowedWord,
   getCurrentRound,
+  getCurrentWord,
   currentRoundWin,
   currentRoundLoss,
 };

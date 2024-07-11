@@ -4,6 +4,7 @@ const express = require("express");
 const cors = require("cors");
 const {
   getCurrentRound,
+  getCurrentWord,
   allowedWord,
   newRound,
   currentRoundWin,
@@ -64,7 +65,7 @@ app.get("/api/allowedWord/:word", async (req, res) => {
     });
 
     const [currentRound, isAllowed] = await Promise.all([
-      getCurrentRound(),
+      getCurrentWord(),
       allowedPromise,
     ]);
 

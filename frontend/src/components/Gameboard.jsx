@@ -115,9 +115,7 @@ function Gameboard({ loading }) {
             });
             console.log(losses);
 
-            window.alert(
-              "Sorry that was wrong, the right word was: " + rightWord.word
-            );
+            window.alert("Sorry that was wrong");
           }
         }
       };
@@ -133,7 +131,7 @@ function Gameboard({ loading }) {
 
   useEffect(() => {
     const updateCurrentGuess = () => {
-      if (gameStatus.activeRow === 0 || gameStatus.activeRow === 5) {
+      if (gameStatus.activeRow === 5) {
         dispatch({
           type: "UPDATE_CURRENT_GUESS",
           payload: ["", "", "", "", ""],
