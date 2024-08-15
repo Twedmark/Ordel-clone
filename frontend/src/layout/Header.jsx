@@ -1,11 +1,15 @@
 import React from "react";
 import "./Header.css";
 
-function Footer() {
+function Header({ setShowModal }) {
+  function toggleModal() {
+    setShowModal((prev) => !prev);
+  }
+
   return (
     <nav className="footerContainer">
       <div className="smallSection">
-        <p>ⓘ</p>
+        <p onClick={toggleModal}>ⓘ</p>
       </div>
       <div className="smallSection">
         <h1>Wordle</h1>
@@ -18,4 +22,4 @@ function Footer() {
   );
 }
 
-export default Footer;
+export default Header;

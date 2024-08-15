@@ -1,0 +1,93 @@
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.45);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 5;
+}
+
+.modalContent {
+  background-color: #191c21;
+  color: #fff;
+  width: 450px;
+  border-radius: 1rem;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  -webkit-box-shadow: 0 0 0.5rem #000;
+  box-shadow: 0 0 0.5rem #000;
+  align-items: center;
+  padding: 1rem;
+}
+
+@media screen and (max-width: 458px) {
+  .modalContent {
+    width: 95%;
+  }
+}
+
+.top {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: -1rem;
+}
+.closeButton {
+  font-weight: bolder;
+  font-size: 1.2rem;
+  margin: 0;
+  cursor: pointer;
+}
+
+.modalHeader {
+  padding: 0;
+  margin: 0;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+
+  h2 {
+    margin: 0;
+    padding: 0;
+    font-size: 1.5rem;
+  }
+  h4 {
+    margin: 0;
+    padding: 0;
+    font-size: 1rem;
+  }
+}
+
+.modalHelp {
+  padding: 0.5rem;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.highlighted {
+  border-radius: 10%;
+  display: inline-block;
+  padding: 0 0.25rem;
+  margin: 0.5rem 0;
+}
+
+.incorrect {
+  background: rgb(59, 59, 59);
+}
+
+.correct {
+  background: green;
+}
+
+.wrongPlace {
+  background: purple;
+}

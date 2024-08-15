@@ -80,6 +80,7 @@ app.get("/api/allowedWord/:word", async (req, res) => {
 
         if (guessChar === correctChar) {
           responseObj.result[i] = "C";
+          correctWord = correctWord.replace(guessChar, "-");
         } else if (correctWord.includes(guessChar)) {
           responseObj.result[i] = "W";
           correctWord = correctWord.replace(guessChar, "-");
@@ -89,7 +90,7 @@ app.get("/api/allowedWord/:word", async (req, res) => {
       }
 
       responseObj.allCorrect =
-        req.params.word.toUpperCase() === correctWord.toUpperCase();
+        req.params.word.toUpperCase() === currentRound.word.toUpperCase();
     }
 
     res.json(responseObj);

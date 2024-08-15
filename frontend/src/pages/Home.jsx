@@ -1,6 +1,6 @@
 import React from "react";
-import Gameboard from "../components/Gameboard";
-import Keyboard from "../components/Keyboard";
+import Gameboard from "../components/Gameboard/Gameboard";
+import Keyboard from "../components/Keyboard/Keyboard";
 
 const Home = ({ loading }) => {
   return (

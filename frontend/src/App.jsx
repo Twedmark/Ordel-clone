@@ -3,6 +3,7 @@ import Home from "./pages/Home";
 import Header from "./layout/Header";
 import { createContext, useEffect, useReducer, useState, useRef } from "react";
 import { gameStateReducer, initialState } from "./reducers/gameStateReducer";
+import Modal from "./components/Modal/Modal";
 
 const BASE_URL = process.env.REACT_APP_BASE_URL;
 
@@ -41,6 +42,20 @@ function App() {
     gameOver: false,
   });
   const [gameState, dispatch] = useReducer(gameStateReducer, initialState);
+  const [showModal, setShowModal] = useState(false);
+  const [infoModal, setInfoModal] = useState(false);
+  const [gameEndModal, setGameEndModal] = useState(false);
+
+  function toggleModalInfo() {
+    setInfoModal(!infoModal);
+    setShowModal(!showModal);
+  }
+
+  function onClose() {
+    setShowModal(false);
+    setInfoModal(false);
+    setGameEndModal(false);
+  }
 
   useEffect(() => {
     const fetchServerData = async () => {
@@ -168,7 +183,14 @@ function App() {
       <RowContext.Provider value={{ rows, setRows }}>
         <ActiveRowContext.Provider value={{ gameStatus, setGameStatus }}>
           <div className="App">
-            <Header />
+            <Header setShowModal={() => toggleModalInfo()} />
+            <Modal
+              onClose={onClose}
+              show={showModal}
+              info={infoModal}
+              gameEnd={gameEndModal}
+            />
+
             <Home loading={!isInitialized} />
           </div>
         </ActiveRowContext.Provider>

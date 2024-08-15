@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { RowContext } from "../App";
+import { RowContext } from "../../App";
 import "./Keyboard.css";
 
 // const BASE_URL = process.env.REACT_APP_BASE_URL;

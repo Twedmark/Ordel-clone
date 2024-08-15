@@ -93,7 +93,7 @@ async function currentRoundLoss() {
     const updatedRound = await collection.findOneAndUpdate(
       { roundNumber },
       {
-        $inc: { losses: 1 },
+        $inc: { losses: 1, totalGuesses: 5 },
       },
       { returnDocument: "after" }
     );
@@ -102,6 +102,7 @@ async function currentRoundLoss() {
       word: updatedRound.word,
       roundNumber: updatedRound.roundNumber,
       losses: updatedRound.losses,
+      totalGuesses: updatedRound.totalGuesses,
     };
     return stats;
   } catch (error) {

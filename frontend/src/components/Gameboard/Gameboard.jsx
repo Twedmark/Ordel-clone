@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import { RowContext, GameContext, ActiveRowContext } from "../App";
+import { RowContext, GameContext, ActiveRowContext } from "../../App";
 import "./Gameboard.css";
 
 const BASE_URL = process.env.REACT_APP_BASE_URL;
@@ -95,6 +95,7 @@ function Gameboard({ loading }) {
             setGameStatus((prevStatus) => {
               return { ...prevStatus, gameOver: true };
             });
+
             // window.alert("Rätt!!");
             const stats = await fetch(
               `${BASE_URL}api/win/${gameStatus.activeRow}`
@@ -107,9 +108,9 @@ function Gameboard({ loading }) {
             return;
           } else if (gameStatus.activeRow === 4 && !response.allCorrect) {
             updateHistory(false, gameState, response, row);
-            const rightWord = await fetch(BASE_URL + "api/word").then((res) => {
-              return res.json();
-            });
+            // const rightWord = await fetch(BASE_URL + "api/word").then((res) => {
+            //   return res.json();
+            // });
             const losses = await fetch(`${BASE_URL}api/loss`).then((res) => {
               return res.json();
             });
@@ -235,11 +236,6 @@ const makeRow = (
 };
 
 const updateHistory = (win, gameState, response, row) => {
-  console.log("updateHistory");
-
-  console.log("row", row);
-  console.log("response", response);
-
   const clone = JSON.parse(JSON.stringify(gameState));
 
   const newGameHistory = {
@@ -258,6 +254,18 @@ const updateHistory = (win, gameState, response, row) => {
     losses: 0,
     previousGames: [],
   };
+  console.log(gameHistory);
+
+  if (gameHistory.previousGames.length > 1) {
+    for (let i = 0; i < gameHistory.previousGames.length; i++) {
+      if (
+        gameHistory.previousGames[i].RoundNumber === newGameHistory.RoundNumber
+      ) {
+        return;
+      }
+    }
+  }
+
   if (win) {
     gameHistory.wins += 1;
   } else {
