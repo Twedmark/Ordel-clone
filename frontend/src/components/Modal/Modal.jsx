@@ -1,15 +1,14 @@
-import React, { useState } from "react";
+import React from "react";
+import { makeRow } from "../Gameboard/Gameboard";
 import "./Modal.css";
 
 function Modal({ onClose, show, info = false, gameEnd = false }) {
-  console.log("showModal", show);
-
-  console.log("info:", info, " gameEnd:", gameEnd);
+  // console.log("showModal", show);
+  // console.log("info:", info, " gameEnd:", gameEnd);
 
   if (!show) {
     return null;
   }
-
   return (
     <div className="modalOverlay" onClick={onClose}>
       <div className="modalContent" onClick={(e) => e.stopPropagation()}>
@@ -27,6 +26,9 @@ function Modal({ onClose, show, info = false, gameEnd = false }) {
           </p>
         </section>
         <br />
+        <section className="modalTiles">
+          {makeRow(["P", "H", "A", "S", "E"], ["", "W", "C", "", "W"])}
+        </section>
 
         <section className="modalHelp">
           <p className="highlighted wrongPlace"> Purple </p> background means

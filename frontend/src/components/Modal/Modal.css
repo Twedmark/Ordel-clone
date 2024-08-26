@@ -43,6 +43,7 @@
   font-size: 1.2rem;
   margin: 0;
   cursor: pointer;
+  z-index: 4;
 }
 
 .modalHeader {
@@ -90,4 +91,21 @@
 
 .wrongPlace {
   background: purple;
+}
+
+.modalTiles {
+  grid-gap: 0.25rem;
+  display: grid;
+  flex-grow: 1;
+  grid-template-columns: repeat(5, 1fr);
+  grid-template-rows: repeat(1, 1fr);
+}
+
+.modalTiles div span {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  height: 2rem;
+  width: 2rem;
+  justify-content: center;
 }

@@ -172,7 +172,7 @@ function Gameboard({ loading }) {
   );
 }
 
-const makeRow = (
+export const makeRow = (
   row,
   result,
   animate,
@@ -181,7 +181,7 @@ const makeRow = (
   activeRow,
   gameOver,
   index,
-  loading
+  loading = false
 ) => {
   let tiles = [];
   let activeSquare = true;
