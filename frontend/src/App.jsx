@@ -51,6 +51,11 @@ function App() {
     setShowModal(!showModal);
   }
 
+  function toggleModalGameEnd() {
+    setGameEndModal(!gameEndModal);
+    setShowModal(!showModal);
+  }
+
   function onClose() {
     setShowModal(false);
     setInfoModal(false);
@@ -189,9 +194,13 @@ function App() {
               show={showModal}
               info={infoModal}
               gameEnd={gameEndModal}
+              isInitialized={isInitialized}
             />
 
-            <Home loading={!isInitialized} />
+            <Home
+              loading={!isInitialized}
+              setShowModal={() => toggleModalGameEnd()}
+            />
           </div>
         </ActiveRowContext.Provider>
       </RowContext.Provider>

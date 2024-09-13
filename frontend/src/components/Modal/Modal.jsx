@@ -1,22 +1,37 @@
-import React from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { makeRow } from "../Gameboard/Gameboard";
+import { GameContext } from "../../App";
+
 import "./Modal.css";
 
-function Modal({ onClose, show, info = false, gameEnd = false }) {
-  // console.log("showModal", show);
-  // console.log("info:", info, " gameEnd:", gameEnd);
+function Modal({
+  onClose,
+  show,
+  info = false,
+  gameEnd = false,
+  isInitialized,
+}) {
+  const { gameState } = useContext(GameContext);
+  const [gameWon, setGameWon] = useState(false);
+  let content = {};
+
+  useEffect(() => {
+    if (isInitialized) {
+      setGameWon(
+        gameState.pastGuesses[gameState.pastGuesses.length - 1].result.every(
+          (res) => res === "C"
+        )
+      );
+    }
+  }, [isInitialized, gameState.pastGuesses]);
 
   if (!show) {
     return null;
   }
-  return (
-    <div className="modalOverlay" onClick={onClose}>
-      <div className="modalContent" onClick={(e) => e.stopPropagation()}>
-        <div className="top">
-          <p className="closeButton" onClick={onClose}>
-            X
-          </p>
-        </div>
+
+  if (info) {
+    content = (
+      <>
         <section className="modalHeader">
           <h2>How To Play</h2>
           <h4>Guess the word in 5 tries</h4>
@@ -43,6 +58,89 @@ function Modal({ onClose, show, info = false, gameEnd = false }) {
           letter is <br />
           not in the word.
         </section>
+      </>
+    );
+  }
+
+  if (gameEnd && !gameWon) {
+    content = (
+      <>
+        <section className="modalHeader">
+          <h1>Sorry that was incorrect</h1>
+        </section>
+        <section className="modalBody">
+          <p>
+            This website is just for practicing my development skills. Play the
+            original game{" "}
+            <a
+              target="_blank"
+              rel="noopener noreferrer"
+              className="wordleLink"
+              href="https://www.nytimes.com/games/wordle/index.html"
+            >
+              Wordle
+            </a>{" "}
+            or the swedish version{" "}
+            <a
+              target="_blank"
+              rel="noopener noreferrer"
+              className="ordelLink"
+              href="https://www.ordel.se/"
+            >
+              Ordel
+            </a>{" "}
+            where i took a lot of design inspiration from.
+          </p>
+          <h2>Thanks for playing!</h2>
+        </section>
+      </>
+    );
+  }
+
+  if (gameEnd && gameWon) {
+    content = (
+      <>
+        <section className="modalHeader">
+          <h1>Congratulations you won!</h1>
+        </section>
+        <section className="modalBody">
+          <p>
+            This website is just for practicing my development skills. Play the
+            original game{" "}
+            <a
+              target="_blank"
+              rel="noopener noreferrer"
+              className="wordleLink"
+              href="https://www.nytimes.com/games/wordle/index.html"
+            >
+              Wordle
+            </a>{" "}
+            or the swedish version{" "}
+            <a
+              target="_blank"
+              rel="noopener noreferrer"
+              className="ordelLink"
+              href="https://www.ordel.se/"
+            >
+              Ordel
+            </a>{" "}
+            where i took a lot of design inspiration from.
+          </p>
+          <h2>Thanks for playing!</h2>
+        </section>
+      </>
+    );
+  }
+
+  return (
+    <div className="modalOverlay" onClick={onClose}>
+      <div className="modalContent" onClick={(e) => e.stopPropagation()}>
+        <div className="top">
+          <p className="closeButton" onClick={onClose}>
+            X
+          </p>
+        </div>
+        {content}
       </div>
     </div>
   );

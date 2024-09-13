@@ -109,3 +109,21 @@
   width: 2rem;
   justify-content: center;
 }
+
+a {
+  font-weight: bold;
+}
+.wordleLink {
+  color: green;
+}
+.ordelLink {
+  color: purple;
+}
+
+.modalBody {
+  padding: 0.5rem;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}

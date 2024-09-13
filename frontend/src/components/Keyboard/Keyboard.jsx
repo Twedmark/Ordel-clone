@@ -1,10 +1,13 @@
 import React, { useContext, useEffect, useState } from "react";
 import { RowContext } from "../../App";
+import { ActiveRowContext } from "../../App";
+
 import "./Keyboard.css";
 
 // const BASE_URL = process.env.REACT_APP_BASE_URL;
 
-function Keyboard() {
+function Keyboard({ setShowModal }) {
+  const { gameStatus } = useContext(ActiveRowContext);
   const { rows } = useContext(RowContext);
   const [className, setClassName] = useState({
     Q: "key",
@@ -38,11 +41,9 @@ function Keyboard() {
     M: "key",
   });
 
-  // const testingFunction = () => {
-  //   fetch(BASE_URL + "api/test")
-  //     .then((res) => res.json())
-  //     .then((data) => console.log(data));
-  // };
+  function toggleModal() {
+    setShowModal((prev) => !prev);
+  }
 
   useEffect(() => {
     const createClassName = () => {
@@ -116,22 +117,20 @@ function Keyboard() {
             >
               <i className="material-icons">backspace</i>
             </button>
-            <button
-              className="key enter"
-              onClick={() => {
-                handleClickedLetter("Enter");
-              }}
-            >
-              Play
-            </button>
-            {/* <button
-              className="key test"
-              onClick={() => {
-                testingFunction();
-              }}
-            >
-              Test
-            </button> */}
+            {!gameStatus.activeRow === 5 || !gameStatus.gameOver ? (
+              <button
+                className="key enter"
+                onClick={() => {
+                  handleClickedLetter("Enter");
+                }}
+              >
+                Play
+              </button>
+            ) : (
+              <button className="key enter" onClick={toggleModal}>
+                End screen
+              </button>
+            )}
           </div>
         </>
       ) : (

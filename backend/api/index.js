@@ -121,12 +121,4 @@ app.get("/api/loss", async (req, res) => {
   res.json(losses);
 });
 
-app.get("/api/test", async (req, res) => {
-  console.log("GET /api/test");
-
-  let text = await newRound();
-
-  res.json(text);
-});
-
 module.exports = app;

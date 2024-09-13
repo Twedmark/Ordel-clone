@@ -4,12 +4,16 @@ import "./Gameboard.css";
 
 const BASE_URL = process.env.REACT_APP_BASE_URL;
 
-function Gameboard({ loading }) {
+function Gameboard({ loading, setShowModal }) {
   const { rows, setRows } = useContext(RowContext);
   const { gameState, dispatch } = useContext(GameContext);
   const { gameStatus, setGameStatus } = useContext(ActiveRowContext);
   const [animate, setAnimate] = useState(false);
   const [spin, setSpin] = useState(false);
+
+  function toggleModal() {
+    setShowModal((prev) => !prev);
+  }
 
   useEffect(() => {
     const handleKeyPress = (event) => {
@@ -19,7 +23,6 @@ function Gameboard({ loading }) {
       const handleRow = async (row, rowIndex) => {
         // this means that the game is over
         if (gameStatus.activeRow === 5 || gameStatus.gameOver) {
-          console.log("The game is over");
           return;
         }
         const emptyIndex = row.board.indexOf("");
@@ -96,13 +99,14 @@ function Gameboard({ loading }) {
               return { ...prevStatus, gameOver: true };
             });
 
-            // window.alert("Rätt!!");
+            toggleModal();
+
             const stats = await fetch(
               `${BASE_URL}api/win/${gameStatus.activeRow}`
             ).then((res) => {
               return res.json();
             });
-            console.log("Correct word!");
+
             console.log(stats);
             updateHistory(true, gameState, response, row);
             return;
@@ -116,7 +120,7 @@ function Gameboard({ loading }) {
             });
             console.log(losses);
 
-            window.alert("Sorry that was wrong");
+            toggleModal();
           }
         }
       };
