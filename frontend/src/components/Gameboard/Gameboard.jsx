@@ -99,7 +99,9 @@ function Gameboard({ loading, setShowModal }) {
               return { ...prevStatus, gameOver: true };
             });
 
-            toggleModal();
+            setTimeout(() => {
+              toggleModal();
+            }, 500);
 
             const stats = await fetch(
               `${BASE_URL}api/win/${gameStatus.activeRow}`
@@ -120,7 +122,9 @@ function Gameboard({ loading, setShowModal }) {
             });
             console.log(losses);
 
-            toggleModal();
+            setTimeout(() => {
+              toggleModal();
+            }, 500);
           }
         }
       };
