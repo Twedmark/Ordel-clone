@@ -16,7 +16,7 @@ function Modal({
   let content = {};
 
   useEffect(() => {
-    if (isInitialized) {
+    if (isInitialized && gameState?.pastGuesses.length !== 0) {
       setGameWon(
         gameState.pastGuesses[gameState.pastGuesses.length - 1].result.every(
           (res) => res === "C"
