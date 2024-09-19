@@ -52,10 +52,14 @@
   top: 0px;
   left: 0px;
   border: 3px solid black;
-  background: repeating-conic-gradient(
-    #0369a1 0deg,
-    #ffffff 1deg,
-    #0369a1 2deg
+  background: rgb(0, 0, 0);
+  background: linear-gradient(
+    45deg,
+    rgba(0, 0, 0, 1) 20%,
+    rgba(12, 40, 96, 1) 21%,
+    rgba(0, 0, 0, 1) 60%,
+    rgba(12, 40, 96, 1) 61%,
+    rgba(0, 0, 0, 1) 100%
   );
 
   -webkit-transform: rotateY(180deg);
@@ -67,7 +71,6 @@
 }
 
 .tile.activeSquare::before {
-  background-color: aqua;
   bottom: 0.5rem;
   content: "";
   height: 0.2rem;
